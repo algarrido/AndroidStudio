@@ -2,12 +2,6 @@
     <string name="app_name" translatable="false">WolfRol</string>
     <string name="title_activity_listado" translatable="false">ListadoActivity</string>
     <string name="title_activity_formulario" translatable="false">FormularioActivity</string>
-    <string-array name="raza_arrays">
-        <item>Semi Elfo</item>
-        <item>Orco</item>
-        <item>Mediano</item>
-        <item>Enano</item>
-    </string-array>
     <string name="title_activity_main" translatable="false">MainActivity</string>
     <string name="title_home" translatable="false">Home</string>
     <string name="title_dashboard" translatable="false">Dashboard</string>
@@ -35,5 +29,13 @@
     <string name="mensaje">¿Desea eliminar este personaje?
         Recuerda que esta acción no se podrá revertir</string>
     <string name="Borrado">¡Cuidado!</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="choose">Elige una opción</string>
+    <string name="add">Añadir</string>
+    <string name="new_option">Nueva opción</string>
+    <string name="cancel">Cancelar</string>
+    <string name="add_new_option">Añadir nueva opción</string>
+    <string name="your_option">Escribe tu opción</string>
     <!--Fin copiar-->
 </resources>

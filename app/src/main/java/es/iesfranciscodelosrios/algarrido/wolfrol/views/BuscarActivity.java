@@ -38,7 +38,6 @@ public class BuscarActivity extends AppCompatActivity implements BuscarInterface
     EditText etFecha;
     Button ibObtenerFecha;
 
-    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

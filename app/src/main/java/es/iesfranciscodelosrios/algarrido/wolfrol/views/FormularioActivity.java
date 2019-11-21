@@ -8,10 +8,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,6 +25,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import es.iesfranciscodelosrios.algarrido.wolfrol.R;
@@ -30,8 +35,9 @@ import es.iesfranciscodelosrios.algarrido.wolfrol.presenters.FormularioPresenter
 public class FormularioActivity extends AppCompatActivity implements FormularioInterface.View{
     String TAG="WolfRol/FormularioActivity";
     private FormularioInterface.Presenter presenter;
-
-
+    private Spinner spinner;
+    private ArrayAdapter<String> adapter;
+    private FloatingActionButton button;
     private DatePicker u;
     private static final String CERO = "0";
     private static final String BARRA = "/";
@@ -59,6 +65,69 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
         setContentView(R.layout.activity_formulario);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
+        // Definición de la lista de opciones
+        ArrayList<String> items = new ArrayList<String>();
+        items.add("Opción 1");
+        items.add("Opción 2");
+        items.add("Opción 3");
+        items.add("Opción 4");
+
+        // Definición del Adaptador que contiene la lista de opciones
+        adapter = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, items);
+        adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+
+        // Definición del Spinner
+        spinner = (Spinner) findViewById(R.id.spinnerRaza);
+        spinner.setAdapter(adapter);
+
+        // Definición de la acción del botón
+        button = (FloatingActionButton) findViewById(R.id.floatingActionButtonAdd);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Recuperación de la vista del AlertDialog a partir del layout de la Actividad
+                LayoutInflater layoutActivity = LayoutInflater.from(context);
+                View viewAlertDialog = layoutActivity.inflate(R.layout.alert_dialog, null);
+
+                // Definición del AlertDialog
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
+
+                // Asignación del AlertDialog a su vista
+                alertDialog.setView(viewAlertDialog);
+
+                // Recuperación del EditText del AlertDialog
+                final EditText dialogInput = (EditText) viewAlertDialog.findViewById(R.id.dialogInput);
+
+                // Configuración del AlertDialog
+                alertDialog
+                        .setCancelable(false)
+                        // Botón Añadir
+                        .setPositiveButton(getResources().getString(R.string.add),
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialogBox, int id) {
+                                        adapter.add(dialogInput.getText().toString());
+                                        spinner.setSelection(adapter.getPosition(dialogInput.getText().toString()));
+                                    }
+                                })
+                        // Botón Cancelar
+                        .setNegativeButton(getResources().getString(R.string.cancel),
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialogBox, int id) {
+                                        dialogBox.cancel();
+                                    }
+                                })
+                        .create()
+                        .show();
+            }
+        });
+
+
+
+
+
+
         presenter = new FormularioPresenter(this);
         presenter.botonVolver();
         pesoInputLayout = (TextInputLayout) findViewById(R.id.TextPeso);
@@ -156,7 +225,27 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
         });
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
     private void obtenerFecha(){
         DatePickerDialog recogerFecha = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener(){
             @Override
