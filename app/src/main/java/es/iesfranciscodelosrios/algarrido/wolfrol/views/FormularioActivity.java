@@ -71,12 +71,18 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
 //-----------------------------------VALIDACION DE CAMPOS-----------------------------------------
         pesoInputLayout = (TextInputLayout) findViewById(R.id.TextPeso);
         final TextInputEditText p = (TextInputEditText) findViewById(R.id.peso);
-        // final EditText f = (EditText) findViewById(R.id.editTextFechaF);
+         final EditText f = (EditText) findViewById(R.id.editTextFechaF);
 
         p.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                presenter.validacionCampoPeso( hasFocus, pesoInputLayout, p);
+                presenter.validacionCampoPeso(hasFocus, pesoInputLayout, p);
+            }
+        });
+        f.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                presenter.validacionCampoFecha(hasFocus,f);
             }
         });
 
@@ -221,27 +227,6 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
         });
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
     private void obtenerFecha(){
         DatePickerDialog recogerFecha = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener(){
             @Override
@@ -262,7 +247,6 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
         recogerFecha.show();
 
     }
-
 
     @Override
     public void volverListado() {
