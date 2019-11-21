@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name" translatable="false">WolfRol</string>
+    <string name="title_activity_listado" translatable="false">ListadoActivity</string>
+    <string name="title_activity_formulario" translatable="false">FormularioActivity</string>
+    <string-array name="raza_arrays">
+        <item>Semi Elfo</item>
+        <item>Orco</item>
+        <item>Mediano</item>
+        <item>Enano</item>
+    </string-array>
+    <string name="title_activity_main" translatable="false">MainActivity</string>
+    <string name="title_home" translatable="false">Home</string>
+    <string name="title_dashboard" translatable="false">Dashboard</string>
+    <string name="title_notifications" translatable="false">Notifications</string>
+    <string name="en_partida">En partida</string>
+    <string name="peso">Peso</string>
+    <string name="nombre">Nombre</string>
+    <string name="g_nero">Género</string>
+    <string name="historia">Historia</string>
+    <string name="tituloFormulario">Creación de personaje</string>
+    <string name="sobreMi">Sobre mi</string>
+    <string name="ajustes">Configuracion</string>
+    <string name="ordenar">Ordenar</string>
+
+    <string name="title_activity_sobre_mi">SobreMiActivity</string>
+    <string name="buscar" />
+    <string name="title_activity_buscar">BuscarActivity</string>
+    <string name="lorem_ipsum">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type</string>
+
+    <!--Copiar-->
+    <string name="titlulo_pickers">Obtener fecha y hora</string>
+
+    <string name="formato_fecha">dd/mm/yyyy</string>
+    <string name="formato_hora">hh:mm</string>
+    <!--Fin copiar-->
+</resources>
