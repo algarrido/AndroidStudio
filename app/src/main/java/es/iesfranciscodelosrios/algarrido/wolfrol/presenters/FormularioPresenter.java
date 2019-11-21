@@ -50,14 +50,14 @@ public class FormularioPresenter implements FormularioInterface.Presenter {
 
     public static final String REGEX_LETRAS = "[a-zA-Z]";
     public static final String REGEX_FECHA = "^(?:3[01]|[12][0-9]|0?[1-9])([\\-/.])(0?[1-9]|1[1-2])\\1\\d{4}$";
+    Pattern patron2 = Pattern.compile(REGEX_FECHA);
 
     @Override
-    public void validacionCampo(boolean hasFocus, TextInputLayout nombreInputLayout, TextInputEditText n, EditText e) {
+    public void validacionCampoPeso(boolean hasFocus, TextInputLayout nombreInputLayout, TextInputEditText n) {
         Pattern patron = Pattern.compile(REGEX_LETRAS);
-        Pattern patron2 = Pattern.compile(REGEX_FECHA);
 
         String stCampoLetra = n.getText().toString().trim();
-        String stCampoFecha = n.getText().toString().trim();
+
         if (!hasFocus) {
             Log.d("AppCRUD", n.getText().toString());
             if (patron.matcher(stCampoLetra).matches()) {
@@ -66,15 +66,12 @@ public class FormularioPresenter implements FormularioInterface.Presenter {
             } else {
                 nombreInputLayout.setError("");
             }
-            if (!hasFocus) {
-                Log.d("AppCRUD", e.getText().toString());
-                if (patron2.matcher(stCampoFecha).matches()) {
-                    e.setError("Fecha inválida");
 
-                } else {
-                    e.setError("");
-                }
-            }
         }
+    }
+
+    @Override
+    public void validacionCampoFecha(Boolean hasFocus, EditText editText) {
+
     }
 }

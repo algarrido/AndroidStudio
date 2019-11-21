@@ -18,7 +18,7 @@ public interface FormularioInterface {
         void botonVolver();
         void guardarFormulario(FormularioPresenter.Callback callback);
         void eliminarFormulario();
-        void validacionCampo(boolean hasFocus, TextInputLayout nombreInputLayout, TextInputEditText n, EditText e);
-
+        void validacionCampoPeso(boolean hasFocus, TextInputLayout nombreInputLayout, TextInputEditText n);
+        void validacionCampoFecha(Boolean hasFocus,EditText editText);
     }
 }

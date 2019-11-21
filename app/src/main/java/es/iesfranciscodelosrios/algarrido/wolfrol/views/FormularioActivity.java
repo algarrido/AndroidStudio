@@ -66,13 +66,26 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        presenter = new FormularioPresenter(this);
+        presenter.botonVolver();
+//-----------------------------------VALIDACION DE CAMPOS-----------------------------------------
+        pesoInputLayout = (TextInputLayout) findViewById(R.id.TextPeso);
+        final TextInputEditText p = (TextInputEditText) findViewById(R.id.peso);
+        // final EditText f = (EditText) findViewById(R.id.editTextFechaF);
 
-        // Definición de la lista de opciones
+        p.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                presenter.validacionCampoPeso( hasFocus, pesoInputLayout, p);
+            }
+        });
+
+        // Definición de la lista de opciones------------------------------------
         ArrayList<String> items = new ArrayList<String>();
-        items.add("Opción 1");
-        items.add("Opción 2");
-        items.add("Opción 3");
-        items.add("Opción 4");
+        items.add("Elfo");
+        items.add("Orco");
+        items.add("Semi Elfo");
+        items.add("Humano");
 
         // Definición del Adaptador que contiene la lista de opciones
         adapter = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, items);
@@ -119,18 +132,10 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
                                     }
                                 })
                         .create()
-                        .show();
+                .show();
             }
         });
 
-
-
-
-
-
-        presenter = new FormularioPresenter(this);
-        presenter.botonVolver();
-        pesoInputLayout = (TextInputLayout) findViewById(R.id.TextPeso);
 
         //----------------------DECLARACION PARA LA FECHA-----------------------------------------------
         //Widget EditText donde se mostrara la fecha obtenida
@@ -167,16 +172,7 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
             }
         });
 
-//-----------------------------------VALIDACION DE CAMPOS-----------------------------------------
-        final TextInputEditText p = (TextInputEditText) findViewById(R.id.peso);
-        final EditText f = (EditText) findViewById(R.id.editTextFechaF);
 
-        p.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                presenter.validacionCampo( hasFocus, pesoInputLayout,  p,f);
-            }
-        });
         //------------------------------BOTON ELIMINAR---------------------------------------------------
         FloatingActionButton btn = findViewById(R.id.floatingActionButtonEliminar);
         btn.setOnClickListener(new View.OnClickListener() {

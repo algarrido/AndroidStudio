@@ -91,7 +91,8 @@
                 android:layout_width="132dp"
                 android:layout_height="0dp"
                 android:layout_marginTop="60dp"
-                android:entries="@array/raza_arrays"
+
+
                 android:popupBackground="#FFFF"
                 android:textColor="#999999"
                 app:layout_constraintEnd_toStartOf="@+id/floatingActionButtonAdd"
