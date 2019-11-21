@@ -1,9 +1,13 @@
 package es.iesfranciscodelosrios.algarrido.wolfrol.views;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -44,9 +48,9 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
     EditText etFecha;
     Button ibObtenerFecha;
 
-    TextInputLayout nombreInputLayout;
     TextInputLayout pesoInputLayout;
-    TextInputLayout generoInputLayout;
+    final Context context = this;
+    FloatingActionButton delete;
 
 
     @Override
@@ -57,16 +61,14 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
         setSupportActionBar(toolbar);
         presenter = new FormularioPresenter(this);
         presenter.botonVolver();
-
-        nombreInputLayout = (TextInputLayout) findViewById(R.id.TextNombre);
         pesoInputLayout = (TextInputLayout) findViewById(R.id.TextPeso);
-        generoInputLayout = (TextInputLayout) findViewById(R.id.TextGenero);
+
+        //----------------------DECLARACION PARA LA FECHA-----------------------------------------------
         //Widget EditText donde se mostrara la fecha obtenida
         etFecha = (EditText) findViewById(R.id.editTextFechaF);
         //Widget ImageButton del cual usaremos el evento clic para obtener la fecha
         ibObtenerFecha = (Button) findViewById(R.id.ButtonDatePicket);
         //Evento setOnClickListener - clic
-
         ibObtenerFecha.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -74,6 +76,7 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
             }
         });
 
+//--------------------------------------------BOTON GUARDAR-------------------------------------------
         FloatingActionButton fab = findViewById(R.id.floatingActionButtonGuardar);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,17 +98,64 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
             }
         });
 
-
+//-----------------------------------VALIDACION DE CAMPOS-----------------------------------------
         final TextInputEditText p = (TextInputEditText) findViewById(R.id.peso);
-
+        final EditText f = (EditText) findViewById(R.id.editTextFechaF);
 
         p.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                presenter.validacionCampo( hasFocus, pesoInputLayout,  p);
+                presenter.validacionCampo( hasFocus, pesoInputLayout,  p,f);
             }
         });
+        //------------------------------BOTON ELIMINAR---------------------------------------------------
+        FloatingActionButton btn = findViewById(R.id.floatingActionButtonEliminar);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View vieww) {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(FormularioActivity.this);
+                dialog.setTitle(R.string.Borrado);
+                dialog.setMessage(R.string.mensaje);
+                dialog.setCancelable(true);
+
+                dialog.setPositiveButton(
+                        "Sí",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int
+                                    id) {
+                                presenter.guardarFormulario(new FormularioPresenter.Callback() {
+                                    @Override
+                                    public void onOk() {
+                                        Toast.makeText(FormularioActivity.this, "Eliminando...", Toast.LENGTH_SHORT).show(); //Correcto
+                                        Intent intent = new Intent(FormularioActivity.this, ListadoActivity.class);
+                                        startActivity(intent);
+                                    }
+
+                                    @Override
+                                    public void onError(String errMsg) {
+                                        Toast.makeText(FormularioActivity.this, errMsg, Toast.LENGTH_SHORT).show(); //error
+                                    }
+                                });
+
+
+
+                            }
+                        });
+                dialog.setNegativeButton(
+                        "No",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+                AlertDialog alert = dialog.create();
+                alert.show();
+            }
+
+        });
     }
+
 
     private void obtenerFecha(){
         DatePickerDialog recogerFecha = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener(){

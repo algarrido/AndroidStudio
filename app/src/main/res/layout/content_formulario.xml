@@ -98,7 +98,7 @@
                 android:layout_marginRight="10dp"
                 android:background="#00FFFFFF"
                 android:ems="10"
-                android:hint="Fec. Nac."
+                android:hint="@string/fecha"
                 android:inputType="date"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/ButtonDatePicket"
@@ -124,7 +124,7 @@
                 style="@style/campo"
                 android:layout_marginStart="4dp"
                 android:layout_marginLeft="4dp"
-                android:hint="Genero"
+                android:hint="@string/gnero"
                 app:layout_constraintStart_toEndOf="@+id/imageViewGenero"
                 app:layout_constraintTop_toBottomOf="@+id/TextPeso">
 
@@ -272,7 +272,7 @@
                 app:srcCompat="@drawable/ic_action_edit" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/floatingActionButton"
+                android:id="@+id/floatingActionButtonEliminar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:clickable="true"

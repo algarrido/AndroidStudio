@@ -1,6 +1,7 @@
 package es.iesfranciscodelosrios.algarrido.wolfrol.interfaces;
 
 import android.view.View;
+import android.widget.EditText;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -16,7 +17,8 @@ public interface FormularioInterface {
     public interface Presenter{
         void botonVolver();
         void guardarFormulario(FormularioPresenter.Callback callback);
-        void validacionCampo(boolean hasFocus, TextInputLayout nombreInputLayout, TextInputEditText n);
+        void eliminarFormulario();
+        void validacionCampo(boolean hasFocus, TextInputLayout nombreInputLayout, TextInputEditText n, EditText e);
 
     }
 }

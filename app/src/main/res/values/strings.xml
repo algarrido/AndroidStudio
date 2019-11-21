@@ -15,12 +15,13 @@
     <string name="en_partida">En partida</string>
     <string name="peso">Peso</string>
     <string name="nombre">Nombre</string>
-    <string name="g_nero">Género</string>
+    <string name="gnero">Género</string>
     <string name="historia">Historia</string>
     <string name="tituloFormulario">Creación de personaje</string>
     <string name="sobreMi">Sobre mi</string>
     <string name="ajustes">Configuracion</string>
     <string name="ordenar">Ordenar</string>
+    <string name="fecha">Fec. Nac.</string>
 
     <string name="title_activity_sobre_mi">SobreMiActivity</string>
     <string name="buscar" />
@@ -31,6 +32,8 @@
     <string name="titlulo_pickers">Obtener fecha y hora</string>
 
     <string name="formato_fecha">dd/mm/yyyy</string>
-    <string name="formato_hora">hh:mm</string>
+    <string name="mensaje">¿Desea eliminar este personaje?
+        Recuerda que esta acción no se podrá revertir</string>
+    <string name="Borrado">¡Cuidado!</string>
     <!--Fin copiar-->
 </resources>
