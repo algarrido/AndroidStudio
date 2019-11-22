@@ -14,7 +14,7 @@ import es.iesfranciscodelosrios.algarrido.wolfrol.interfaces.FormularioInterface
 public class FormularioPresenter implements FormularioInterface.Presenter {
 
     private FormularioInterface.View view;
-
+    String TAG="WolfRol/FormularioPresenter";
     public FormularioPresenter(FormularioInterface.View view) {
         this.view = view;
     }
@@ -48,7 +48,7 @@ public class FormularioPresenter implements FormularioInterface.Presenter {
 
     }
 
-    public static final String REGEX_LETRAS = "[a-zA-Z]";
+    public static final String REGEX_LETRAS = "[A-Za-z]*";
     public static final String REGEX_FECHA = "^(?:3[01]|[12][0-9]|0?[1-9])([\\-/.])(0?[1-9]|1[1-2])\\1\\d{4}$";
 
 
@@ -78,13 +78,13 @@ public class FormularioPresenter implements FormularioInterface.Presenter {
 
         if (!hasFocus) {
             Log.d("AppCRUD", editText.getText().toString());
-            if (patron2.matcher(stCampoLetra).matches()) {
-                editText.setError("Peso inválido");
 
-            } else {
-                editText.setError("");
-            }
+                if (patron2.matcher(stCampoLetra).matches()) {
+                    Log.d(TAG, "Campo fecha correcto");
 
+                } else {
+                    editText.setError("Introduzca éste formato: DD/MM/YYYY");
+                }
         }
     }
 }

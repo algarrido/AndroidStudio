@@ -11,10 +11,14 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.Spinner;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import es.iesfranciscodelosrios.algarrido.wolfrol.R;
@@ -27,7 +31,8 @@ public class BuscarActivity extends AppCompatActivity implements BuscarInterface
     private DatePicker u;
     private static final String CERO = "0";
     private static final String BARRA = "/";
-
+    private ArrayAdapter<String> adapter;
+    private Spinner spinner;
     //Calendario para obtener fecha
     public final Calendar c = Calendar.getInstance();
     //Variables para obtener la fecha
@@ -47,9 +52,9 @@ public class BuscarActivity extends AppCompatActivity implements BuscarInterface
 
         //----------------------DECLARACION PARA LA FECHA-----------------------------------------------
         //Widget EditText donde se mostrara la fecha obtenida
-        etFecha = (EditText) findViewById(R.id.editTextFechaF);
+        etFecha = (EditText) findViewById(R.id.editTextDate);
         //Widget ImageButton del cual usaremos el evento clic para obtener la fecha
-        ibObtenerFecha = (Button) findViewById(R.id.ButtonDatePicket);
+        ibObtenerFecha = (Button) findViewById(R.id.buttonDatePicketB);
         //Evento setOnClickListener - clic
         ibObtenerFecha.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,10 +62,6 @@ public class BuscarActivity extends AppCompatActivity implements BuscarInterface
                 obtenerFecha();
             }
         });
-
-
-
-
 
 
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -73,6 +74,19 @@ public class BuscarActivity extends AppCompatActivity implements BuscarInterface
         });
         presenter = new BuscarPresenter(this);
         presenter.botonVolver();
+        ArrayList<String> items = new ArrayList<String>();
+        items.add("Elfo");
+        items.add("Orco");
+        items.add("Semi Elfo");
+        items.add("Humano");
+
+        // Definición del Adaptador que contiene la lista de opciones
+        adapter = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, items);
+        adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+
+        // Definición del Spinner
+        spinner = (Spinner) findViewById(R.id.spinnerbuscar);
+        spinner.setAdapter(adapter);
     }
     private void obtenerFecha(){
         DatePickerDialog recogerFecha = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener(){

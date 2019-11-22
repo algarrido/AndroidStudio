@@ -24,6 +24,7 @@
             android:id="@+id/textViewSobreMi"
             android:layout_width="match_parent"
             android:layout_height="264dp"
+            android:background="#00FFFFFF"
             android:text="@string/lorem_ipsum"
             style="@style/myEditText"/>
 

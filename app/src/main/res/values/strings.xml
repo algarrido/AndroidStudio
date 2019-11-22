@@ -18,9 +18,10 @@
     <string name="fecha">Fec. Nac.</string>
 
     <string name="title_activity_sobre_mi">SobreMiActivity</string>
-    <string name="buscar" />
+    <string name="buscar">Buscar </string>
     <string name="title_activity_buscar">BuscarActivity</string>
-    <string name="lorem_ipsum">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type</string>
+    <string name="lorem_ipsum">WolfRol es una aplicación para irte de aventura. ¡Corre y crea tú personaje! Mi email de aventurero es: algarrido@iesfranciscodelosrios.es -
+    Contacta conmigo, soy Lidia Garrido</string>
 
     <!--Copiar-->
     <string name="titlulo_pickers">Obtener fecha y hora</string>
@@ -37,5 +38,7 @@
     <string name="cancel">Cancelar</string>
     <string name="add_new_option">Añadir nueva opción</string>
     <string name="your_option">Escribe tu opción</string>
+    <string name="fechaP">Fecha creacion del personaje</string>
+    <string name="nombreB">Nombre a buscar</string>
     <!--Fin copiar-->
 </resources>

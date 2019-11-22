@@ -8,8 +8,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -71,7 +69,7 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
 //-----------------------------------VALIDACION DE CAMPOS-----------------------------------------
         pesoInputLayout = (TextInputLayout) findViewById(R.id.TextPeso);
         final TextInputEditText p = (TextInputEditText) findViewById(R.id.peso);
-         final EditText f = (EditText) findViewById(R.id.editTextFechaF);
+
 
         p.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -79,6 +77,7 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
                 presenter.validacionCampoPeso(hasFocus, pesoInputLayout, p);
             }
         });
+        final EditText f = (EditText) findViewById(R.id.editTextFechaF);
         f.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {

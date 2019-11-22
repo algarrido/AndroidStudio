@@ -108,7 +108,7 @@
                 android:layout_marginRight="10dp"
                 android:background="#00FFFFFF"
                 android:ems="10"
-                android:hint="Fec. Nac."
+                android:hint="@string/fecha"
                 android:inputType="date"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/ButtonDatePicket"
