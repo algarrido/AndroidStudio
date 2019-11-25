@@ -1,5 +1,9 @@
 package es.iesfranciscodelosrios.algarrido.wolfrol.interfaces;
 
+import java.util.ArrayList;
+
+import es.iesfranciscodelosrios.algarrido.wolfrol.models.Personaje;
+
 public interface ListadoInterface {
 
     public interface View{
@@ -13,5 +17,6 @@ public interface ListadoInterface {
         void botonAñadir();
         void pestaña3();
         void pestañaBuscar();
+        ArrayList<Personaje> getAllPersonaje();
     }
 }
