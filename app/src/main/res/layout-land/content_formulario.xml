@@ -139,7 +139,7 @@
                 android:layout_marginLeft="4dp"
                 android:layout_marginTop="5dp"
                 android:hint="Genero"
-                app:layout_constraintStart_toEndOf="@+id/imageViewGenero"
+                app:layout_constraintStart_toEndOf="@+id/imageViewP"
                 app:layout_constraintTop_toBottomOf="@+id/TextPeso">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -189,7 +189,7 @@
                 app:srcCompat="@drawable/ic_accessibility" />
 
             <ImageView
-                android:id="@+id/imageViewGenero"
+                android:id="@+id/imageViewP"
                 android:layout_width="31dp"
                 android:layout_height="30dp"
                 android:layout_marginStart="10dp"

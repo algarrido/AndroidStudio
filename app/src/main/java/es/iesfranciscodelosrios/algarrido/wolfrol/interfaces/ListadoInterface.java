@@ -8,9 +8,9 @@ public interface ListadoInterface {
 
     public interface View{
 
-        void lanzarFormulario();
         void lanzarSobreMi();
         void lanzarBuscar();
+        void lanzarFormulario(int id);
     }
 
     public interface Presenter{
@@ -18,5 +18,7 @@ public interface ListadoInterface {
         void pestaña3();
         void pestañaBuscar();
         ArrayList<Personaje> getAllPersonaje();
+        void onClickRecyclerView(int id);
+
     }
 }

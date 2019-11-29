@@ -17,7 +17,7 @@ public class ListadoPresenter implements ListadoInterface.Presenter {
     }
     @Override
     public void botonAñadir() {
-        view.lanzarFormulario();
+        view.lanzarFormulario(-1);
     }
     @Override
     public void pestaña3() {
@@ -32,5 +32,11 @@ public class ListadoPresenter implements ListadoInterface.Presenter {
     @Override
     public ArrayList<Personaje>getAllPersonaje(){
         return personaje.getAllPersonaje();
+    }
+
+
+    @Override
+    public void onClickRecyclerView(int id){
+        view.lanzarFormulario(id);
     }
 }

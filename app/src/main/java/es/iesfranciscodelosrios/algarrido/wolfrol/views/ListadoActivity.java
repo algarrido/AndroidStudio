@@ -7,29 +7,51 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import java.util.ArrayList;
+
 import es.iesfranciscodelosrios.algarrido.wolfrol.R;
 import es.iesfranciscodelosrios.algarrido.wolfrol.interfaces.ListadoInterface;
+import es.iesfranciscodelosrios.algarrido.wolfrol.models.Personaje;
 import es.iesfranciscodelosrios.algarrido.wolfrol.presenters.ListadoPresenter;
 
 public class ListadoActivity extends AppCompatActivity implements ListadoInterface.View{
     String TAG="WolfRol/ListadoActivity";
     private ListadoInterface.Presenter presenter;
-
+    private PersonajeAdapter adaptador;
+    private ArrayList<Personaje> items;
+    RecyclerView recyclerView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listado);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         presenter = new ListadoPresenter(this);
 
+//------------------------------------------------------------------------------------------------//
+        recyclerView =(RecyclerView) findViewById(R.id.listadoReciclesView);
+        items = presenter.getAllPersonaje();
+        adaptador = new PersonajeAdapter(items);
+        adaptador.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Acción al pulsar el elemento
+                int position = recyclerView.getChildAdapterPosition(v);
+                Log.d(TAG,"Click RV: " + items.get(position).getId().toString());
+                presenter.onClickRecyclerView(items.get(position).getId());
+            }
+        });
+        recyclerView.setAdapter(adaptador);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        //------------------------------------------------------------------------------------------------//
         FloatingActionButton fab = findViewById(R.id.listadoFb);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,10 +124,16 @@ public class ListadoActivity extends AppCompatActivity implements ListadoInterfa
     }
 
     @Override
-    public void lanzarFormulario() {
-        Log.d(TAG,"Lanzando Formulario...");
-        Intent intent = new Intent(ListadoActivity.this, FormularioActivity.class);
-        startActivity(intent);
+    public void lanzarFormulario(int id) {
+        Log.d(TAG,"Lanzando Formulario..");
+        if(id==-1) {
+            Intent intent = new Intent(ListadoActivity.this, FormularioActivity.class);
+            startActivity(intent);
+        }else{
+            Intent intent = new Intent(ListadoActivity.this, FormularioActivity.class);
+            startActivity(intent);
+            //BUNDLE
+        }
     }
 
     @Override
