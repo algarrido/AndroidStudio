@@ -1,8 +1,12 @@
 package es.iesfranciscodelosrios.algarrido.wolfrol.views;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,16 +26,23 @@ public class PersonajeAdapter extends RecyclerView.Adapter<PersonajeAdapter.Pers
 
         private TextView TextView_nombre;
         private TextView TextView_historia;
+        private ImageView imageView;
 
         public PersonajeViewHolder(View itemView) {
             super(itemView);
             TextView_nombre = (TextView) itemView.findViewById(R.id.textViewNombre);
             TextView_historia = (TextView) itemView.findViewById(R.id.textViewHistoriaa);
+            imageView = (ImageView) itemView.findViewById(R.id.imageViewNombre);
         }
 
         public void PersonajeBind(Personaje item) {
             TextView_nombre.setText(item.getNombre());
             TextView_historia.setText(item.getHistoria());
+            byte[] decodedString = Base64.decode(item.getImagen(),Base64.DEFAULT);
+            Bitmap decodedByte= BitmapFactory.decodeByteArray(
+                    decodedString,0,decodedString.length);
+            imageView.setImageBitmap(decodedByte);
+
         }
     }
 

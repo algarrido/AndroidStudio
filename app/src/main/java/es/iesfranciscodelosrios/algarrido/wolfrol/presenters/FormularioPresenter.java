@@ -1,8 +1,13 @@
 package es.iesfranciscodelosrios.algarrido.wolfrol.presenters;
 
 
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.util.Log;
 import android.widget.EditText;
+
+import androidx.core.content.ContextCompat;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -87,4 +92,57 @@ public class FormularioPresenter implements FormularioInterface.Presenter {
         }
     }
 
+    @Override
+    public void onClickImage(Context c) {
+        int ReadPermission = ContextCompat.checkSelfPermission(c, Manifest.permission.READ_EXTERNAL_STORAGE);
+
+        if (ReadPermission != PackageManager.PERMISSION_GRANTED) {
+            // Permiso denegado
+            view.requestPermision();
+
+        }else{
+            //view.lauchGallery();
+        }
+    }
+
+    @Override
+    public void resultPermission(int result) {
+        if (result == PackageManager.PERMISSION_GRANTED) {
+            // Permiso aceptado
+            Log.d(TAG,"Permiso aceptado");
+           // view.lauckgalery();
+
+        } else {
+            // Permiso rechazado
+            Log.d(TAG,"Permiso denegado");
+            //view.showSnackBar("Sin permisos no puedes entrar") con snavbar
+        }
+    }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
