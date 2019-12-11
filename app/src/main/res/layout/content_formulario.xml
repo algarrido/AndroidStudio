@@ -34,8 +34,10 @@
                 android:layout_height="142dp"
                 app:layout_constraintBottom_toBottomOf="@+id/imageViewPersonaje"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.498"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="1.0"
                 app:srcCompat="@android:drawable/ic_menu_gallery" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -53,17 +55,17 @@
 
             <ImageView
                 android:id="@+id/imageViewPersonaje"
-                android:layout_width="0dp"
-                android:layout_height="204dp"
+                android:layout_width="101dp"
+                android:layout_height="129dp"
                 android:background="#00FFFFFF"
                 android:backgroundTint="#00FFFFFF"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintHorizontal_bias="0.511"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.485"
-                app:srcCompat="@drawable/personaje" />
+                app:layout_constraintVertical_bias="0.407"
+                tools:srcCompat="@tools:sample/avatars" />
 
             <Switch
                 android:id="@+id/switchEnPartida"
@@ -199,6 +201,24 @@
                 android:shadowColor="#FFFFFF"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/TextGenero" />
+
+            <TextView
+                android:id="@+id/SelecionImage"
+                android:layout_width="129dp"
+                android:layout_height="17dp"
+                android:layout_marginStart="165dp"
+                android:layout_marginLeft="165dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="169dp"
+                android:layout_marginRight="169dp"
+                android:layout_marginBottom="30dp"
+                android:text="Selecciona imagen"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.314"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageViewPersonaje"
+                app:layout_constraintVertical_bias="0.0" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

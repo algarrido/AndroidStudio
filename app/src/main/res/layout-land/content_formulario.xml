@@ -63,8 +63,8 @@
 
             <ImageView
                 android:id="@+id/imageViewPersonaje"
-                android:layout_width="797dp"
-                android:layout_height="169dp"
+                android:layout_width="313dp"
+                android:layout_height="157dp"
                 android:background="#00FFFFFF"
                 android:backgroundTint="#00FFFFFF"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -72,7 +72,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.157"
-                app:srcCompat="@drawable/personaje" />
+                tools:srcCompat="@tools:sample/avatars" />
 
             <Switch
                 android:id="@+id/switchEnPartida"

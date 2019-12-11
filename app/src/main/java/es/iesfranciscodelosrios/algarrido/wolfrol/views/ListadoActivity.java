@@ -14,6 +14,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import java.util.ArrayList;
 
@@ -28,6 +30,8 @@ public class ListadoActivity extends AppCompatActivity implements ListadoInterfa
     private PersonajeAdapter adaptador;
     private ArrayList<Personaje> items;
     RecyclerView recyclerView;
+  //  ListView listView;
+   // ArrayAdapter<PersonajeAdapter> adaptadorr;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +39,11 @@ public class ListadoActivity extends AppCompatActivity implements ListadoInterfa
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         presenter = new ListadoPresenter(this);
+
+      //  listView = (ListView) findViewById(R.id.listadoReciclesView);
+      //  listView.setAdapter(adaptadorr);
+        // ArrayList<Personaje> arrayList = new ArrayList<Personaje>();
+         //ArrayAdapter<PersonajeAdapter> adaptadorr;
 
 //------------------------------------------------------------------------------------------------//
         recyclerView =(RecyclerView) findViewById(R.id.listadoReciclesView);
@@ -61,7 +70,30 @@ public class ListadoActivity extends AppCompatActivity implements ListadoInterfa
 
             }
         });
+      /*  adaptadorr = new ArrayAdapter<PersonajeAdapter>( this, android.R.layout.activity_list_item, arrayList);
+        listView.setAdapter(adaptadorr);
+        SwipeListViewTouchListener touchListener =new SwipeListViewTouchListener(listView,new SwipeListViewTouchListener.OnSwipeCallback() {
+            @Override
+            public void onSwipeLeft(ListView listView, int [] reverseSortedPositions) {
+                //Aqui ponemos lo que hara el programa cuando deslizamos un item ha la izquierda
+                arrayList.remove(reverseSortedPositions[0]);
+                adaptadorr.notifyDataSetChanged();
+            }
+
+
+            @Override
+            public void onSwipeRight(ListView listView, int [] reverseSortedPositions) {
+                //Aqui ponemos lo que hara el programa cuando deslizamos un item ha la derecha
+                arrayList.remove(reverseSortedPositions[0]);
+                adaptador.notifyDataSetChanged();
+            }
+        },true, false);
+
+        //Escuchadores del listView
+        recyclerView.setOnTouchListener(touchListener);
+        listView.setOnScrollListener(touchListener.makeScrollListener());*/
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

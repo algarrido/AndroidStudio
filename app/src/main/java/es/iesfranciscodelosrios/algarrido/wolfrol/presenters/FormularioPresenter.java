@@ -3,18 +3,30 @@ package es.iesfranciscodelosrios.algarrido.wolfrol.presenters;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.util.Log;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.regex.Pattern;
 
+import es.iesfranciscodelosrios.algarrido.wolfrol.R;
 import es.iesfranciscodelosrios.algarrido.wolfrol.interfaces.FormularioInterface;
+import es.iesfranciscodelosrios.algarrido.wolfrol.views.FormularioActivity;
 
 public class FormularioPresenter implements FormularioInterface.Presenter {
 
@@ -98,25 +110,36 @@ public class FormularioPresenter implements FormularioInterface.Presenter {
 
         if (ReadPermission != PackageManager.PERMISSION_GRANTED) {
             // Permiso denegado
+
             view.requestPermision();
+           // Snackbar.make((View) view, "Permiso denegado", Snackbar.LENGTH_LONG)
+              //      .show();
 
         }else{
-            //view.lauchGallery();
+            //Snackbar.make((View) view, "Permiso aceptado ", Snackbar.LENGTH_LONG)
+              //     .show();
+            view.selectPicture();
         }
     }
 
     @Override
     public void resultPermission(int result) {
-        if (result == PackageManager.PERMISSION_GRANTED) {
-            // Permiso aceptado
-            Log.d(TAG,"Permiso aceptado");
-           // view.lauckgalery();
+            if (result == PackageManager.PERMISSION_GRANTED) {
+                // Permiso aceptado
+                Log.d(TAG,"Permiso aceptado");
+                view.selectPicture();
+               // Snackbar.make((View) view, "Permiso aceptado", Snackbar.LENGTH_LONG)
+                  //      .show();
 
-        } else {
-            // Permiso rechazado
-            Log.d(TAG,"Permiso denegado");
-            //view.showSnackBar("Sin permisos no puedes entrar") con snavbar
-        }
+            } else {
+                // Permiso rechazado
+                Log.d(TAG,"Permiso denegado");
+                view.requestPermision();
+                 //Snackbar.make((View) view, "Permiso denegado", Snackbar.LENGTH_LONG)
+                   //    .show();
+
+
+            }
     }
 
 }

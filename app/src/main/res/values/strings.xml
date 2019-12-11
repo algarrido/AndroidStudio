@@ -40,5 +40,6 @@
     <string name="your_option">Escribe tu opción</string>
     <string name="fechaP">Fecha creacion del personaje</string>
     <string name="nombreB">Nombre a buscar</string>
+    <string name="seleccion">Seleciona imagen</string>
     <!--Fin copiar-->
 </resources>

@@ -1,6 +1,7 @@
 package es.iesfranciscodelosrios.algarrido.wolfrol.interfaces;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 import android.widget.EditText;
 
@@ -15,7 +16,7 @@ public interface FormularioInterface {
     public interface View{
         void volverListado();
         void requestPermision();
-
+        void selectPicture();
     }
 
     public interface Presenter{

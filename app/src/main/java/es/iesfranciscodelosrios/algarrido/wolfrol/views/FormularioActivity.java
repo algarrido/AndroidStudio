@@ -6,8 +6,9 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.nfc.Tag;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,7 +18,6 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.QuickContactBadge;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -30,12 +30,17 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 
 import es.iesfranciscodelosrios.algarrido.wolfrol.R;
 import es.iesfranciscodelosrios.algarrido.wolfrol.interfaces.FormularioInterface;
 import es.iesfranciscodelosrios.algarrido.wolfrol.presenters.FormularioPresenter;
+
+
+
 
 public class FormularioActivity extends AppCompatActivity implements FormularioInterface.View{
     String TAG="WolfRol/FormularioActivity";
@@ -46,7 +51,7 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
     private DatePicker u;
     private static final String CERO = "0";
     private static final String BARRA = "/";
-
+    private static final int REQUEST_SELECT_IMAGE = 201;
     //Calendario para obtener fecha
     public final Calendar c = Calendar.getInstance();
 
@@ -65,6 +70,8 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
 
     ImageView gallery;
     final private int CODE_READ_EXTERNAL_STORAGE_PERMISSION=123;
+    private Uri uri;
+   
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -241,8 +248,56 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
             public void onClick(View v) {
                 presenter.onClickImage(context);
 
+
             }
         });
+        ///////////////////////////////////////////////////////////////////////////
+        //ImageView buttonGallery = (ImageView) findViewById(R.id.imageViewPersonaje);
+
+    }
+@Override
+    public void selectPicture(){
+        // Se le pide al sistema una imagen del dispositivo
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(
+                Intent.createChooser(intent, getResources().getString(R.string.seleccion)),
+                REQUEST_SELECT_IMAGE);
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+
+            case (REQUEST_SELECT_IMAGE):
+                if (resultCode == FormularioActivity.RESULT_OK) {
+                    // Se carga la imagen desde un objeto Bitmap
+                    Uri selectedImage = data.getData();
+                    String selectedPath = selectedImage.getPath();
+
+                    if (selectedPath != null) {
+                        // Se leen los bytes de la imagen
+                        InputStream imageStream = null;
+                        try {
+                            imageStream = getContentResolver().openInputStream(selectedImage);
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        }
+
+                        // Se transformam los bytes de la imagen a un Bitmap
+                        Bitmap bmp = BitmapFactory.decodeStream(imageStream);
+
+                        // Se carga el Bitmap en el ImageView
+                        ImageView imageView = findViewById(R.id.imageViewPersonaje);
+                        imageView.setImageBitmap(bmp);
+                    }
+                }
+                break;
+        }
     }
 
     private void obtenerFecha(){
@@ -276,7 +331,6 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
     public void requestPermision() {
         ActivityCompat.requestPermissions(FormularioActivity.this, new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, CODE_READ_EXTERNAL_STORAGE_PERMISSION);
 
-
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -284,7 +338,6 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
             case CODE_READ_EXTERNAL_STORAGE_PERMISSION:
 
                     presenter.resultPermission(grantResults[0]);
-
 
                 break;
             default:
