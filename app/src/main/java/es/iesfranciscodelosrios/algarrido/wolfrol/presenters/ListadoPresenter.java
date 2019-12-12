@@ -1,10 +1,18 @@
 package es.iesfranciscodelosrios.algarrido.wolfrol.presenters;
 
+import android.content.Context;
+
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.ArrayList;
 
 import es.iesfranciscodelosrios.algarrido.wolfrol.interfaces.ListadoInterface;
 import es.iesfranciscodelosrios.algarrido.wolfrol.models.Personaje;
 import es.iesfranciscodelosrios.algarrido.wolfrol.models.PersonajeModel;
+import es.iesfranciscodelosrios.algarrido.wolfrol.utils.VerticalSpacingItemDecorator;
+import es.iesfranciscodelosrios.algarrido.wolfrol.views.PersonajeAdapter;
 
 public class ListadoPresenter implements ListadoInterface.Presenter {
 
@@ -38,5 +46,16 @@ public class ListadoPresenter implements ListadoInterface.Presenter {
     @Override
     public void onClickRecyclerView(int id){
         view.lanzarFormulario(id);
+    }
+
+    @Override
+    public void initRecyclerView(RecyclerView r, PersonajeAdapter a, ItemTouchHelper.SimpleCallback i, Context c){
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(c);
+        r.setLayoutManager(linearLayoutManager);
+        VerticalSpacingItemDecorator itemDecorator = new VerticalSpacingItemDecorator(10);
+        r.addItemDecoration(itemDecorator);
+        new ItemTouchHelper(i).attachToRecyclerView(r);
+        //adaptador = new RecyclerView(items, this);
+        r.setAdapter(a);
     }
 }

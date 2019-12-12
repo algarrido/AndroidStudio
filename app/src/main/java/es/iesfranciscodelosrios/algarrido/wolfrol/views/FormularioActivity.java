@@ -8,7 +8,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,26 +20,21 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.app.ActivityCompat;
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
-
 import es.iesfranciscodelosrios.algarrido.wolfrol.R;
 import es.iesfranciscodelosrios.algarrido.wolfrol.interfaces.FormularioInterface;
 import es.iesfranciscodelosrios.algarrido.wolfrol.presenters.FormularioPresenter;
-
-
 
 
 public class FormularioActivity extends AppCompatActivity implements FormularioInterface.View{
@@ -64,16 +58,13 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
     //Widgets
     EditText etFecha;
     Button ibObtenerFecha;
-
+    View v;
     TextInputLayout pesoInputLayout;
     final Context context = this;
     FloatingActionButton delete;
-
     ImageView gallery;
     final private int CODE_READ_EXTERNAL_STORAGE_PERMISSION=123;
     private Uri uri;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -194,7 +185,6 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
             }
         });
 
-
         //------------------------------BOTON ELIMINAR---------------------------------------------------
         FloatingActionButton btn = findViewById(R.id.floatingActionButtonEliminar);
         btn.setOnClickListener(new View.OnClickListener() {
@@ -223,9 +213,6 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
                                         Toast.makeText(FormularioActivity.this, errMsg, Toast.LENGTH_SHORT).show(); //error
                                     }
                                 });
-
-
-
                             }
                         });
                 dialog.setNegativeButton(
@@ -246,31 +233,18 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
         gallery.setClickable(true);
         gallery.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View vev) {
                 presenter.onClickImage(context);
-
-
             }
         });
         ///////////////////////////////////////////////////////////////////////////
-        //ImageView buttonGallery = (ImageView) findViewById(R.id.imageViewPersonaje);
 
-        //sirve para si no ponemos ninguna foto se nos pone una por defecto que es la del logo
-        if(gallery.getDrawable() == null){
-            gallery.setImageResource(R.drawable.logo);
-        }
 
-        //convertirlo en bitmap a la hora de usar base64
         ImageView iv= findViewById(R.id.imageViewPersonaje);
-        BitmapDrawable bmDr=(BitmapDrawable) iv.getDrawable();
-        if (bmDr != null){
-            bmp=bmDr.getBitmap();
-        }else{
-            bmp=null;
-        }
-
+        presenter.galeria(gallery,iv,bmp);
     }
-@Override
+
+    @Override
     public void selectPicture(){
         // Se le pide al sistema una imagen del dispositivo
         Intent intent = new Intent();
@@ -280,7 +254,6 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
                 Intent.createChooser(intent, getResources().getString(R.string.seleccion)),
                 REQUEST_SELECT_IMAGE);
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -347,12 +320,27 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
         ActivityCompat.requestPermissions(FormularioActivity.this, new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, CODE_READ_EXTERNAL_STORAGE_PERMISSION);
 
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch (requestCode) {
             case CODE_READ_EXTERNAL_STORAGE_PERMISSION:
 
-                    presenter.resultPermission(grantResults[0]);
+                    presenter.resultPermission(grantResults[0], new FormularioPresenter.Callback() {
+                        @Override
+                        public void onOk() {
+                            Log.d(TAG, getResources().getString(R.string.permisoOk));
+                        }
+
+                        @Override
+                        public void onError(String errMsg) {
+                            CoordinatorLayout coordinatorLayout = findViewById(R.id.CoordinatorLayout);
+
+                            Snackbar snackbar = Snackbar
+                                    .make(coordinatorLayout, getResources().getString(R.string.permiso), Snackbar.LENGTH_LONG);
+                            snackbar.show();
+                        }
+                    });
 
                 break;
             default:

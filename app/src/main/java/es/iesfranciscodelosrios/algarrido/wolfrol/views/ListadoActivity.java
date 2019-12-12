@@ -1,15 +1,20 @@
 package es.iesfranciscodelosrios.algarrido.wolfrol.views;
 
 import android.content.Intent;
+import android.icu.lang.UCharacter;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,15 +28,15 @@ import es.iesfranciscodelosrios.algarrido.wolfrol.R;
 import es.iesfranciscodelosrios.algarrido.wolfrol.interfaces.ListadoInterface;
 import es.iesfranciscodelosrios.algarrido.wolfrol.models.Personaje;
 import es.iesfranciscodelosrios.algarrido.wolfrol.presenters.ListadoPresenter;
+import es.iesfranciscodelosrios.algarrido.wolfrol.utils.VerticalSpacingItemDecorator;
 
-public class ListadoActivity extends AppCompatActivity implements ListadoInterface.View{
-    String TAG="WolfRol/ListadoActivity";
+public class ListadoActivity extends AppCompatActivity implements ListadoInterface.View {
+    String TAG = "WolfRol/ListadoActivity";
     private ListadoInterface.Presenter presenter;
     private PersonajeAdapter adaptador;
     private ArrayList<Personaje> items;
     RecyclerView recyclerView;
-  //  ListView listView;
-   // ArrayAdapter<PersonajeAdapter> adaptadorr;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,13 +45,13 @@ public class ListadoActivity extends AppCompatActivity implements ListadoInterfa
         setSupportActionBar(toolbar);
         presenter = new ListadoPresenter(this);
 
-      //  listView = (ListView) findViewById(R.id.listadoReciclesView);
-      //  listView.setAdapter(adaptadorr);
+        //  listView = (ListView) findViewById(R.id.listadoReciclesView);
+        //  listView.setAdapter(adaptadorr);
         // ArrayList<Personaje> arrayList = new ArrayList<Personaje>();
-         //ArrayAdapter<PersonajeAdapter> adaptadorr;
+        //ArrayAdapter<PersonajeAdapter> adaptadorr;
 
 //------------------------------------------------------------------------------------------------//
-        recyclerView =(RecyclerView) findViewById(R.id.listadoReciclesView);
+        recyclerView = (RecyclerView) findViewById(R.id.listadoReciclesView);
         items = presenter.getAllPersonaje();
         adaptador = new PersonajeAdapter(items);
         adaptador.setOnClickListener(new View.OnClickListener() {
@@ -54,7 +59,7 @@ public class ListadoActivity extends AppCompatActivity implements ListadoInterfa
             public void onClick(View v) {
                 // Acción al pulsar el elemento
                 int position = recyclerView.getChildAdapterPosition(v);
-                Log.d(TAG,"Click RV: " + items.get(position).getId().toString());
+                Log.d(TAG, "Click RV: " + items.get(position).getId().toString());
                 presenter.onClickRecyclerView(items.get(position).getId());
             }
         });
@@ -65,36 +70,32 @@ public class ListadoActivity extends AppCompatActivity implements ListadoInterfa
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG,"Pulsando boton flotante...");
+                Log.d(TAG, "Pulsando boton flotante...");
                 presenter.botonAñadir();
 
             }
         });
-      /*  adaptadorr = new ArrayAdapter<PersonajeAdapter>( this, android.R.layout.activity_list_item, arrayList);
-        listView.setAdapter(adaptadorr);
-        SwipeListViewTouchListener touchListener =new SwipeListViewTouchListener(listView,new SwipeListViewTouchListener.OnSwipeCallback() {
-            @Override
-            public void onSwipeLeft(ListView listView, int [] reverseSortedPositions) {
-                //Aqui ponemos lo que hara el programa cuando deslizamos un item ha la izquierda
-                arrayList.remove(reverseSortedPositions[0]);
-                adaptadorr.notifyDataSetChanged();
-            }
+        swipeRecyclerView();
 
-
-            @Override
-            public void onSwipeRight(ListView listView, int [] reverseSortedPositions) {
-                //Aqui ponemos lo que hara el programa cuando deslizamos un item ha la derecha
-                arrayList.remove(reverseSortedPositions[0]);
-                adaptador.notifyDataSetChanged();
-            }
-        },true, false);
-
-        //Escuchadores del listView
-        recyclerView.setOnTouchListener(touchListener);
-        listView.setOnScrollListener(touchListener.makeScrollListener());*/
+    }
+    @Override
+    public void swipeRecyclerView(){
+        presenter.initRecyclerView(recyclerView,adaptador,itemTouchHelperCallback,this);
     }
 
+        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT |ItemTouchHelper.LEFT) {
+        @Override
+        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+            return false;
+        }
 
+        @Override
+        public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+            items.remove(viewHolder.getAdapterPosition());
+            adaptador.notifyDataSetChanged();
+
+        }
+    };
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

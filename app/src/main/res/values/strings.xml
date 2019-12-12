@@ -41,5 +41,8 @@
     <string name="fechaP">Fecha creacion del personaje</string>
     <string name="nombreB">Nombre a buscar</string>
     <string name="seleccion">Seleciona imagen</string>
+    <string name="historia1">Lentamente las nieves de las Ered Meneltobas iba desapareciendo según avanzaba el año 80, el cortejo funerario de Anarel Elamarth hacía meses que había alcanzado su destino y la matriarca ya descansaba bajo los frondosos bosques de Ithilien.</string>
+    <string name="permiso">Permiso denegado</string>
+    <string name="permisoOk">Permiso aceptado</string>
     <!--Fin copiar-->
 </resources>

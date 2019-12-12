@@ -3,34 +3,27 @@ package es.iesfranciscodelosrios.algarrido.wolfrol.presenters;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
+import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+
 import java.util.regex.Pattern;
 
 import es.iesfranciscodelosrios.algarrido.wolfrol.R;
 import es.iesfranciscodelosrios.algarrido.wolfrol.interfaces.FormularioInterface;
-import es.iesfranciscodelosrios.algarrido.wolfrol.views.FormularioActivity;
 
 public class FormularioPresenter implements FormularioInterface.Presenter {
 
     private FormularioInterface.View view;
+
     String TAG="WolfRol/FormularioPresenter";
     public FormularioPresenter(FormularioInterface.View view) {
         this.view = view;
@@ -51,11 +44,13 @@ public class FormularioPresenter implements FormularioInterface.Presenter {
     @Override
     public void guardarFormulario(Callback callback) {
         //Simular logica guardado ok y ko
+        boolean guardado=true;
         double a = Math.random();
-        if (a >= 0.5) {
-            callback.onError("Error...");
-        } else {
+        if (guardado) {
             callback.onOk();
+
+        } else {
+            callback.onError("Error...");
         }
     }
 
@@ -66,7 +61,6 @@ public class FormularioPresenter implements FormularioInterface.Presenter {
 
     public static final String REGEX_LETRAS = "[A-Za-z]*";
     public static final String REGEX_FECHA = "^(?:3[01]|[12][0-9]|0?[1-9])([\\-/.])(0?[1-9]|1[1-2])\\1\\d{4}$";
-
 
     @Override
     public void validacionCampoPeso(boolean hasFocus, TextInputLayout nombreInputLayout, TextInputEditText n) {
@@ -112,34 +106,40 @@ public class FormularioPresenter implements FormularioInterface.Presenter {
             // Permiso denegado
 
             view.requestPermision();
-           // Snackbar.make((View) view, "Permiso denegado", Snackbar.LENGTH_LONG)
-              //      .show();
 
         }else{
-            //Snackbar.make((View) view, "Permiso aceptado ", Snackbar.LENGTH_LONG)
-              //     .show();
+
             view.selectPicture();
         }
     }
 
     @Override
-    public void resultPermission(int result) {
+    public void resultPermission(int result,Callback callback) {
             if (result == PackageManager.PERMISSION_GRANTED) {
                 // Permiso aceptado
                 Log.d(TAG,"Permiso aceptado");
                 view.selectPicture();
-               // Snackbar.make((View) view, "Permiso aceptado", Snackbar.LENGTH_LONG)
-                  //      .show();
+
 
             } else {
                 // Permiso rechazado
                 Log.d(TAG,"Permiso denegado");
-                view.requestPermision();
-                 //Snackbar.make((View) view, "Permiso denegado", Snackbar.LENGTH_LONG)
-                   //    .show();
-
+                callback.onError("");
 
             }
+    }
+    @Override
+    public void galeria(ImageView i, ImageView iv, Bitmap bmp) {
+        if(i.getDrawable() == null){
+            i.setImageResource(R.drawable.logo);
+        }
+        //ImageView iv= findViewById(R.id.imageViewPersonaje);
+        BitmapDrawable bmDr=(BitmapDrawable) iv.getDrawable();
+        if (bmDr != null){
+            bmp=bmDr.getBitmap();
+        }else{
+            bmp=null;
+        }
     }
 
 }

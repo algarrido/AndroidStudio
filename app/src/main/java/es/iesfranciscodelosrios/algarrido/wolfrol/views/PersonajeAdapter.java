@@ -38,10 +38,15 @@ public class PersonajeAdapter extends RecyclerView.Adapter<PersonajeAdapter.Pers
         public void PersonajeBind(Personaje item) {
             TextView_nombre.setText(item.getNombre());
             TextView_historia.setText(item.getHistoria());
-            byte[] decodedString = Base64.decode(item.getImagen(),Base64.DEFAULT);
-            Bitmap decodedByte= BitmapFactory.decodeByteArray(
-                    decodedString,0,decodedString.length);
-            imageView.setImageBitmap(decodedByte);
+            try {
+                byte[] decodedString = Base64.decode(item.getImagen(),Base64.DEFAULT);
+                Bitmap decodedByte= BitmapFactory.decodeByteArray(
+                        decodedString,0,decodedString.length);
+                imageView.setImageBitmap(decodedByte);
+            }catch (NullPointerException n){
+                imageView.setImageResource(R.drawable.logo);
+            }
+
 
         }
     }

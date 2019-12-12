@@ -33,4 +33,7 @@
     <string name="lorem_ipsum">WolfRol is an application to go on an adventure. Run and create your character! My adventurer email is: algarrido@iesfranciscodelosrios.es -
    Contact me, I am Lidia Garrido</string>
     <string name="seleccion">choose image</string>
+    <string name="historia1">Lentamente las nieves de las Ered Meneltobas iba desapareciendo según avanzaba el año 80, el cortejo funerario de Anarel Elamarth hacía meses que había alcanzado su destino y la matriarca ya descansaba bajo los frondosos bosques de Ithilien.</string>
+    <string name="permiso">Permiso denegado</string>
+    <string name="permisoOk">Permiso aceptado</string>
 </resources>
