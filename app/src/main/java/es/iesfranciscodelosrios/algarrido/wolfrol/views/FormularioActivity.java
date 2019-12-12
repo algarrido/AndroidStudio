@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -59,7 +60,7 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
     final int mes = c.get(Calendar.MONTH);
     final int dia = c.get(Calendar.DAY_OF_MONTH);
     final int anio = c.get(Calendar.YEAR);
-
+    private Bitmap bmp;
     //Widgets
     EditText etFecha;
     Button ibObtenerFecha;
@@ -71,7 +72,7 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
     ImageView gallery;
     final private int CODE_READ_EXTERNAL_STORAGE_PERMISSION=123;
     private Uri uri;
-   
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -253,6 +254,20 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
         });
         ///////////////////////////////////////////////////////////////////////////
         //ImageView buttonGallery = (ImageView) findViewById(R.id.imageViewPersonaje);
+
+        //sirve para si no ponemos ninguna foto se nos pone una por defecto que es la del logo
+        if(gallery.getDrawable() == null){
+            gallery.setImageResource(R.drawable.logo);
+        }
+
+        //convertirlo en bitmap a la hora de usar base64
+        ImageView iv= findViewById(R.id.imageViewPersonaje);
+        BitmapDrawable bmDr=(BitmapDrawable) iv.getDrawable();
+        if (bmDr != null){
+            bmp=bmDr.getBitmap();
+        }else{
+            bmp=null;
+        }
 
     }
 @Override
