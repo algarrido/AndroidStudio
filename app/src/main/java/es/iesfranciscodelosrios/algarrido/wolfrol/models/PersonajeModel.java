@@ -1,15 +1,48 @@
 package es.iesfranciscodelosrios.algarrido.wolfrol.models;
 
-import android.util.Log;
-
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import java.util.ArrayList;
 
-import es.iesfranciscodelosrios.algarrido.wolfrol.R;
 
-public class PersonajeModel {
+public class PersonajeModel extends SQLiteOpenHelper {
+    private static final String DATABASE_NAME = "rol";
+    private static final int DATABASE_VERSION = 1;
+    private static PersonajeModel sInstance;
 
-    public PersonajeModel() {
+    private PersonajeModel(Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
+
+    public static synchronized PersonajeModel getInstance(Context context) {
+        // Use the application context, which will ensure that you
+        // don't accidentally leak an Activity's context.
+        // See this article for more information: http://bit.ly/6LRzfx
+        if (sInstance == null) {
+            sInstance = new PersonajeModel(context.getApplicationContext());
+        }
+        return sInstance;
+    }
+
+    @Override
+    public void onConfigure(SQLiteDatabase db) {
+        super.onConfigure(db);
+        db.setForeignKeyConstraintsEnabled(true);
+    }
+
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+
+    }
+
+    @Override //actualiza si hay un cambio de version
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
+    }
+
+
+
     public ArrayList<Personaje> getAllPersonaje(){
 
         ArrayList<Personaje> list=new ArrayList<Personaje>();
@@ -89,4 +122,6 @@ public class PersonajeModel {
         list.add(personaje4);
         return list;
     }
+
+
 }

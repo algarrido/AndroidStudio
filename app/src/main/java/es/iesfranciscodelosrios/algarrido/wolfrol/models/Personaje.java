@@ -5,18 +5,18 @@ public class Personaje {
     private String imagen=null;
     private String nombre=null;
     private String historia=null;
-    private String peso=null;
+    private int peso=0;
     private String genero;
 
     public Personaje() {
 
     }
 
-    public String getPeso() {
+    public int getPeso() {
         return peso;
     }
 
-    public void setPeso(String peso) {
+    public void setPeso(int peso) {
         this.peso = peso;
     }
 
