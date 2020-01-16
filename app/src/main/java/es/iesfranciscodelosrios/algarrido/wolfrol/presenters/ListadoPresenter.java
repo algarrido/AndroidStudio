@@ -21,7 +21,7 @@ public class ListadoPresenter implements ListadoInterface.Presenter {
 
     public ListadoPresenter(ListadoInterface.View view){
         this.view=view;
-        this.personaje=new PersonajeModel();
+        this.personaje= PersonajeModel.getInstance(); //esto ha cambiado
     }
     @Override
     public void botonAñadir() {

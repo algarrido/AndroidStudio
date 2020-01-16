@@ -1,13 +1,20 @@
 package es.iesfranciscodelosrios.algarrido.wolfrol.models;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
 import java.util.ArrayList;
+
+import es.iesfranciscodelosrios.algarrido.wolfrol.views.MyApplication;
 
 
 public class PersonajeModel extends SQLiteOpenHelper {
-    private static final String DATABASE_NAME = "rol";
+    private static final String DATABASE_NAME = "rol.db";
     private static final int DATABASE_VERSION = 1;
     private static PersonajeModel sInstance;
 
@@ -15,12 +22,12 @@ public class PersonajeModel extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    public static synchronized PersonajeModel getInstance(Context context) {
+    public static synchronized PersonajeModel getInstance() { //quitar la variable del contexto y crearla global
         // Use the application context, which will ensure that you
         // don't accidentally leak an Activity's context.
         // See this article for more information: http://bit.ly/6LRzfx
         if (sInstance == null) {
-            sInstance = new PersonajeModel(context.getApplicationContext());
+            sInstance = new PersonajeModel(MyApplication.getContext()); //esto ha acmabiado
         }
         return sInstance;
     }
@@ -32,8 +39,20 @@ public class PersonajeModel extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onCreate(SQLiteDatabase db) {
+    public void onCreate(SQLiteDatabase db) { //se ejecuta una vez y yasta, eliminar caché o el fichero oculto (carpeta data/data/y busca la aplicacion.)
+        String CREATE_TABLE_PERSONAJE="CREATE TABLE Personaje (id INTEGER PRIMARY KEY AUTOINCREMENT, nombre TEXT,peso TEXT, genero TEXT,historia TEXT)";
+        try {
+            if (db != null) {
+                db.execSQL(CREATE_TABLE_PERSONAJE);
+                Log.d("PersonajeModel",CREATE_TABLE_PERSONAJE );
 
+
+            }
+        }
+        catch(SQLException e){
+            //do something
+           //Log("db", e.getMessage());
+        }
     }
 
     @Override //actualiza si hay un cambio de version
@@ -121,6 +140,55 @@ public class PersonajeModel extends SQLiteOpenHelper {
 
         list.add(personaje4);
         return list;
+    }
+    public boolean addNewPersonaje(Personaje p){
+        SQLiteDatabase db = getWritableDatabase();
+        boolean correcto=true;
+        db.beginTransaction();
+        try {
+            // The user might already exist in the database (i.e. the same user created multiple posts).
+
+            ContentValues values = new ContentValues();
+            values.put("nombre",p.getNombre());
+            values.put("peso",p.getPeso());
+            values.put("genero",p.getGenero());
+            values.put("historia",p.getHistoria());
+           // values.put(KEY_POST_TEXT, post.text);
+
+            // Notice how we haven't specified the primary key. SQLite auto increments the primary key column.
+            db.insertOrThrow("Personaje", null, values);
+           db.setTransactionSuccessful();
+            Log.d("TAG BUENO", "Error while trying to add post to database");
+        } catch (Exception e) {
+            Log.d("TAG", "Error while trying to add post to database");
+            correcto=false;
+
+        } finally {
+            db.endTransaction();
+            db.close();
+        }
+        return correcto;
+    }
+    public ArrayList<Personaje> showPersonaje(Personaje p){
+        SQLiteDatabase db = getWritableDatabase();
+       // ArrayList<Personaje> personaje = ArrayList);
+        db.beginTransaction();
+        String[] campos = new String[] {"id", "nombre","historia"};
+        String[] args = new String[] {"usu1"};
+
+        Cursor c = db.query("Personaje", campos, null, null, null, null, null);
+
+//Nos aseguramos de que existe al menos un registro
+        if (c.moveToFirst()) {
+            //Recorremos el cursor hasta que no haya más registros
+            do {
+                String id= c.getString(c.getColumnIndex("id"));
+                String nombre = c.getString(c.getColumnIndex("nombre"));
+                String hisoria = c.getString(c.getColumnIndex("historia"));
+
+            } while(c.moveToNext());
+        }
+        return null;
     }
 
 

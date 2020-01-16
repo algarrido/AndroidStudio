@@ -3,6 +3,7 @@ package es.iesfranciscodelosrios.algarrido.wolfrol.views;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -34,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import es.iesfranciscodelosrios.algarrido.wolfrol.R;
 import es.iesfranciscodelosrios.algarrido.wolfrol.interfaces.FormularioInterface;
+import es.iesfranciscodelosrios.algarrido.wolfrol.models.Personaje;
 import es.iesfranciscodelosrios.algarrido.wolfrol.presenters.FormularioPresenter;
 
 
@@ -58,6 +60,12 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
     //Widgets
     EditText etFecha;
     Button ibObtenerFecha;
+
+    TextInputEditText nombree;
+    TextInputEditText pesoo;
+    TextInputEditText generoo;
+    EditText historiaa;
+
     View v;
     TextInputLayout pesoInputLayout;
     final Context context = this;
@@ -65,6 +73,7 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
     ImageView gallery;
     final private int CODE_READ_EXTERNAL_STORAGE_PERMISSION=123;
     private Uri uri;
+    FloatingActionButton guardar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,6 +84,7 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
         presenter = new FormularioPresenter(this);
         presenter.botonVolver();
 //-----------------------------------VALIDACION DE CAMPOS-----------------------------------------
+        guardar = (FloatingActionButton) findViewById(R.id.floatingActionButtonGuardar);
         pesoInputLayout = (TextInputLayout) findViewById(R.id.TextPeso);
         final TextInputEditText p = (TextInputEditText) findViewById(R.id.peso);
 
@@ -82,7 +92,10 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
         p.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                presenter.validacionCampoPeso(hasFocus, pesoInputLayout, p);
+
+        presenter.validacionCampoPeso(hasFocus, pesoInputLayout, p,guardar);
+
+
             }
         });
         final EditText f = (EditText) findViewById(R.id.editTextFechaF);
@@ -165,16 +178,27 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
 
 //--------------------------------------------BOTON GUARDAR-------------------------------------------
         FloatingActionButton fab = findViewById(R.id.floatingActionButtonGuardar);
-        fab.setOnClickListener(new View.OnClickListener() {
+        nombree = (TextInputEditText) findViewById(R.id.nombre);
+        pesoo = (TextInputEditText) findViewById(R.id.peso);
+        generoo = (TextInputEditText) findViewById(R.id.genero);
+        historiaa = (EditText) findViewById(R.id.editTextHistoria);
+                fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Personaje p = new Personaje();
+                p.setNombre(nombree.getText().toString());
+                p.setPeso(pesoo.getText().toString());
+                p.setGenero(generoo.getText().toString());
+                p.setHistoria(historiaa.getText().toString());
                 Log.d(TAG,"Pulsando boton flotante...");
-                presenter.guardarFormulario(new FormularioPresenter.Callback() {
+                presenter.guardarFormulario(p,new FormularioPresenter.Callback() {
                     @Override
                     public void onOk() {
+
                         Toast.makeText(FormularioActivity.this, "Guardando el formulario...", Toast.LENGTH_SHORT).show(); //Correcto
-                        Intent intent = new Intent(FormularioActivity.this, ListadoActivity.class);
-                        startActivity(intent);
+                        //Intent intent = new Intent(FormularioActivity.this, ListadoActivity.class);
+                        //startActivity(intent);
+                       // finish();
                     }
 
                     @Override
@@ -200,7 +224,9 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int
                                     id) {
-                                presenter.guardarFormulario(new FormularioPresenter.Callback() {
+                                Personaje p = new Personaje();
+
+                                presenter.guardarFormulario(p,new FormularioPresenter.Callback() {
                                     @Override
                                     public void onOk() {
                                         Toast.makeText(FormularioActivity.this, "Eliminando...", Toast.LENGTH_SHORT).show(); //Correcto
@@ -256,6 +282,11 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
     }
 
     @Override
+    public void cerrarFormulario(){
+        finish();
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         super.onActivityResult(requestCode, resultCode, data);
@@ -306,7 +337,6 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
         },anio, mes, dia);
         //Muestro el widget
         recogerFecha.show();
-
     }
 
     @Override

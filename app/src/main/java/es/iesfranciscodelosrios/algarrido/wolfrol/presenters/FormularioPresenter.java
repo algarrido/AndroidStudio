@@ -7,10 +7,13 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
 import androidx.core.content.ContextCompat;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -19,15 +22,20 @@ import java.util.regex.Pattern;
 
 import es.iesfranciscodelosrios.algarrido.wolfrol.R;
 import es.iesfranciscodelosrios.algarrido.wolfrol.interfaces.FormularioInterface;
+import es.iesfranciscodelosrios.algarrido.wolfrol.models.Personaje;
+import es.iesfranciscodelosrios.algarrido.wolfrol.models.PersonajeModel;
 
 public class FormularioPresenter implements FormularioInterface.Presenter {
 
     private FormularioInterface.View view;
+    private PersonajeModel personaje;
 
     String TAG="WolfRol/FormularioPresenter";
     public FormularioPresenter(FormularioInterface.View view) {
         this.view = view;
+        personaje=PersonajeModel.getInstance();
     }
+
 
     public interface Callback {
         public void onOk();
@@ -42,16 +50,25 @@ public class FormularioPresenter implements FormularioInterface.Presenter {
 
 
     @Override
-    public void guardarFormulario(Callback callback) {
+    public void guardarFormulario(Personaje p, Callback callback) {
         //Simular logica guardado ok y ko
         boolean guardado=true;
-        double a = Math.random();
-        if (guardado) {
-            callback.onOk();
+       if( personaje.addNewPersonaje(p)==true){
+           view.cerrarFormulario();
+           callback.onOk();
 
-        } else {
-            callback.onError("Error...");
-        }
+           //cerrar formulario
+       }else{
+           callback.onError("Error...");
+       }
+       // double a = Math.random();
+        //if (guardado) {
+
+
+
+        //} else {
+          //  callback.onError("Error...");
+       // }
     }
 
     @Override
@@ -63,21 +80,24 @@ public class FormularioPresenter implements FormularioInterface.Presenter {
     public static final String REGEX_FECHA = "^(?:3[01]|[12][0-9]|0?[1-9])([\\-/.])(0?[1-9]|1[1-2])\\1\\d{4}$";
 
     @Override
-    public void validacionCampoPeso(boolean hasFocus, TextInputLayout nombreInputLayout, TextInputEditText n) {
+    public void validacionCampoPeso(boolean hasFocus, TextInputLayout nombreInputLayout, TextInputEditText n,FloatingActionButton b) {
         Pattern patron = Pattern.compile(REGEX_LETRAS);
 
         String stCampoLetra = n.getText().toString().trim();
 
         if (!hasFocus) {
             Log.d("AppCRUD", n.getText().toString());
-            if (patron.matcher(stCampoLetra).matches()) {
+            if (patron.matcher(stCampoLetra).matches() && stCampoLetra.isEmpty()) {
                 nombreInputLayout.setError("Peso inválido");
+                b.setEnabled(false);
 
             } else {
                 nombreInputLayout.setError("");
+                b.setEnabled(true);
             }
 
         }
+
     }
 
     @Override

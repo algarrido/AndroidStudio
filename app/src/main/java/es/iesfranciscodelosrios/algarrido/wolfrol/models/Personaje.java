@@ -1,31 +1,62 @@
 package es.iesfranciscodelosrios.algarrido.wolfrol.models;
 
+import android.util.Log;
+
+import java.util.regex.Pattern;
+
 public class Personaje {
+
+    String TAG="WolfRol/Personaje";
+
+    public static final String REGEX_LETRAS = "[A-Za-z]*";
+    public static final String REGEX_HIS="\\w*";
+
     private Integer id;
-    private String imagen=null;
-    private String nombre=null;
-    private String historia=null;
-    private int peso=0;
+    private String imagen = null;
+    private String nombre = null;
+    private String historia = null;
+    private String peso = null;
     private String genero;
 
     public Personaje() {
 
     }
 
-    public int getPeso() {
+    public String getPeso() {
         return peso;
     }
 
-    public void setPeso(int peso) {
-        this.peso = peso;
+
+    public boolean setPeso(String peso) {
+
+        Pattern patron = Pattern.compile(REGEX_LETRAS);
+        String stCampoLetra = peso.toString().trim();
+        if(patron.matcher(stCampoLetra).matches()){ //expresion regular- todos los set
+            Log.d(TAG, "Campo peso incorrecto");
+            return false;
+        }else{
+            this.peso = peso;
+            Log.d(TAG, "Campo peso correcto");
+             return true;
+        }
+
     }
 
     public String getGenero() {
         return genero;
     }
 
-    public void setGenero(String genero) {
-        this.genero = genero;
+    public boolean setGenero(String genero) {
+        Pattern patron = Pattern.compile(REGEX_LETRAS);
+        String stCampoLetra = genero.toString().trim();
+        if(patron.matcher(stCampoLetra).matches()){ //expresion regular- todos los set
+            this.genero = genero;
+            Log.d(TAG, "Campo genero correcto");
+            return true;
+        }else{
+            Log.d(TAG, "Campo genero incorrecto");
+            return false;
+        }
     }
 
     public Integer getId() {
@@ -48,15 +79,35 @@ public class Personaje {
         return nombre;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public boolean setNombre(String nombre){
+        Pattern patron = Pattern.compile(REGEX_LETRAS);
+        String stCampoLetra = nombre.toString().trim();
+        if(patron.matcher(stCampoLetra).matches()){ //expresion regular- todos los set
+            this.nombre = nombre;
+            Log.d(TAG, "Campo nombre correcto");
+            return true;
+        }else{
+            Log.d(TAG, "Campo nombre incorrecto");
+            return false;
+        }
     }
 
     public String getHistoria() {
         return historia;
     }
 
-    public void setHistoria(String historia) {
-        this.historia = historia;
+    public boolean setHistoria(String historia) {
+        Pattern patron = Pattern.compile(REGEX_LETRAS);
+        String stCampoLetra = historia.toString().trim();
+        if(patron.matcher(stCampoLetra).matches()){ //expresion regular- todos los set
+            this.historia = historia;
+            Log.d(TAG, "Campo historia correcto");
+            return true;
+        }else{
+            //Log.d(TAG, "Campo historia incorrecto");
+            this.historia = historia;
+            return false;
+        }
+
     }
 }
