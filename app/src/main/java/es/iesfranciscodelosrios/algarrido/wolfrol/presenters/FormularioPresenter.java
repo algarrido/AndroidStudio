@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -18,6 +19,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 
+import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 import es.iesfranciscodelosrios.algarrido.wolfrol.R;
@@ -30,10 +32,11 @@ public class FormularioPresenter implements FormularioInterface.Presenter {
     private FormularioInterface.View view;
     private PersonajeModel personaje;
 
-    String TAG="WolfRol/FormularioPresenter";
+    String TAG = "WolfRol/FormularioPresenter";
+
     public FormularioPresenter(FormularioInterface.View view) {
         this.view = view;
-        personaje=PersonajeModel.getInstance();
+        personaje = PersonajeModel.getInstance();
     }
 
 
@@ -52,23 +55,19 @@ public class FormularioPresenter implements FormularioInterface.Presenter {
     @Override
     public void guardarFormulario(Personaje p, Callback callback) {
         //Simular logica guardado ok y ko
-        boolean guardado=true;
-       if( personaje.addNewPersonaje(p)==true){
-           view.cerrarFormulario();
-           callback.onOk();
+        boolean guardado = true;
+        if (personaje.addNewPersonaje(p)) {
 
-           //cerrar formulario
-       }else{
-           callback.onError("Error...");
-       }
-       // double a = Math.random();
-        //if (guardado) {
+            view.cerrarFormulario();
+            callback.onOk();
+        } else {
+            callback.onError("Error...");
+        }
+    }
 
-
-
-        //} else {
-          //  callback.onError("Error...");
-       // }
+    @Override
+    public void guardarRaza(String raza) {
+        personaje.addNewRaza(raza);
     }
 
     @Override
@@ -80,7 +79,7 @@ public class FormularioPresenter implements FormularioInterface.Presenter {
     public static final String REGEX_FECHA = "^(?:3[01]|[12][0-9]|0?[1-9])([\\-/.])(0?[1-9]|1[1-2])\\1\\d{4}$";
 
     @Override
-    public void validacionCampoPeso(boolean hasFocus, TextInputLayout nombreInputLayout, TextInputEditText n,FloatingActionButton b) {
+    public void validacionCampoPeso(boolean hasFocus, TextInputLayout nombreInputLayout, TextInputEditText n, FloatingActionButton b) {
         Pattern patron = Pattern.compile(REGEX_LETRAS);
 
         String stCampoLetra = n.getText().toString().trim();
@@ -109,12 +108,12 @@ public class FormularioPresenter implements FormularioInterface.Presenter {
         if (!hasFocus) {
             Log.d("AppCRUD", editText.getText().toString());
 
-                if (patron2.matcher(stCampoLetra).matches()) {
-                    Log.d(TAG, "Campo fecha correcto");
+            if (patron2.matcher(stCampoLetra).matches()) {
+                Log.d(TAG, "Campo fecha correcto");
 
-                } else {
-                    editText.setError("Introduzca éste formato: DD/MM/YYYY");
-                }
+            } else {
+                editText.setError("Introduzca éste formato: DD/MM/YYYY");
+            }
         }
     }
 
@@ -127,38 +126,39 @@ public class FormularioPresenter implements FormularioInterface.Presenter {
 
             view.requestPermision();
 
-        }else{
+        } else {
 
             view.selectPicture();
         }
     }
 
     @Override
-    public void resultPermission(int result,Callback callback) {
-            if (result == PackageManager.PERMISSION_GRANTED) {
-                // Permiso aceptado
-                Log.d(TAG,"Permiso aceptado");
-                view.selectPicture();
+    public void resultPermission(int result, Callback callback) {
+        if (result == PackageManager.PERMISSION_GRANTED) {
+            // Permiso aceptado
+            Log.d(TAG, "Permiso aceptado");
+            view.selectPicture();
 
 
-            } else {
-                // Permiso rechazado
-                Log.d(TAG,"Permiso denegado");
-                callback.onError("");
+        } else {
+            // Permiso rechazado
+            Log.d(TAG, "Permiso denegado");
+            callback.onError("");
 
-            }
+        }
     }
+
     @Override
     public void galeria(ImageView i, ImageView iv, Bitmap bmp) {
-        if(i.getDrawable() == null){
+        if (i.getDrawable() == null) {
             i.setImageResource(R.drawable.logo);
         }
         //ImageView iv= findViewById(R.id.imageViewPersonaje);
-        BitmapDrawable bmDr=(BitmapDrawable) iv.getDrawable();
-        if (bmDr != null){
-            bmp=bmDr.getBitmap();
-        }else{
-            bmp=null;
+        BitmapDrawable bmDr = (BitmapDrawable) iv.getDrawable();
+        if (bmDr != null) {
+            bmp = bmDr.getBitmap();
+        } else {
+            bmp = null;
         }
     }
 

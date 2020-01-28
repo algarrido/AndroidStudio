@@ -1,6 +1,7 @@
 package es.iesfranciscodelosrios.algarrido.wolfrol.presenters;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -19,14 +20,16 @@ public class ListadoPresenter implements ListadoInterface.Presenter {
     private ListadoInterface.View view;
     private PersonajeModel personaje;
 
-    public ListadoPresenter(ListadoInterface.View view){
-        this.view=view;
-        this.personaje= PersonajeModel.getInstance(); //esto ha cambiado
+    public ListadoPresenter(ListadoInterface.View view) {
+        this.view = view;
+        this.personaje = PersonajeModel.getInstance(); //esto ha cambiado
     }
+
     @Override
     public void botonAñadir() {
         view.lanzarFormulario(-1);
     }
+
     @Override
     public void pestaña3() {
         view.lanzarSobreMi();
@@ -38,18 +41,25 @@ public class ListadoPresenter implements ListadoInterface.Presenter {
     }
 
     @Override
-    public ArrayList<Personaje>getAllPersonaje(){
+    public ArrayList<Personaje> getAllPersonaje() {
+       // for (Personaje p : personaje.getAllPersonaje()) {
+
+          //  Log.d("ListadoPresenter", p.getNombre());
+
+        //}
+        //Log.d("ListadoPresenter", p.getNombre());
+
         return personaje.getAllPersonaje();
     }
 
 
     @Override
-    public void onClickRecyclerView(int id){
+    public void onClickRecyclerView(int id) {
         view.lanzarFormulario(id);
     }
 
     @Override
-    public void initRecyclerView(RecyclerView r, PersonajeAdapter a, ItemTouchHelper.SimpleCallback i, Context c){
+    public void initRecyclerView(RecyclerView r, PersonajeAdapter a, ItemTouchHelper.SimpleCallback i, Context c) {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(c);
         r.setLayoutManager(linearLayoutManager);
         VerticalSpacingItemDecorator itemDecorator = new VerticalSpacingItemDecorator(10);

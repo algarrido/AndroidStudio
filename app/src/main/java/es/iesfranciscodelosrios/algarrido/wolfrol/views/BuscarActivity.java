@@ -1,6 +1,7 @@
 package es.iesfranciscodelosrios.algarrido.wolfrol.views;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -17,16 +18,18 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 import es.iesfranciscodelosrios.algarrido.wolfrol.R;
 import es.iesfranciscodelosrios.algarrido.wolfrol.interfaces.BuscarInterface;
 import es.iesfranciscodelosrios.algarrido.wolfrol.presenters.BuscarPresenter;
 
-public class BuscarActivity extends AppCompatActivity implements BuscarInterface.View{
-    String TAG="WolfRol/BuscarActivity";
+public class BuscarActivity extends AppCompatActivity implements BuscarInterface.View {
+    String TAG = "WolfRol/BuscarActivity";
     private BuscarInterface.Presenter presenter;
     private DatePicker u;
     private static final String CERO = "0";
@@ -42,6 +45,7 @@ public class BuscarActivity extends AppCompatActivity implements BuscarInterface
     //Widgets
     EditText etFecha;
     Button ibObtenerFecha;
+    EditText nombre;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,15 +67,8 @@ public class BuscarActivity extends AppCompatActivity implements BuscarInterface
             }
         });
 
+        nombre = (EditText) findViewById(R.id.TextViewnombreB);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
         presenter = new BuscarPresenter(this);
         presenter.botonVolver();
         ArrayList<String> items = new ArrayList<String>();
@@ -87,73 +84,105 @@ public class BuscarActivity extends AppCompatActivity implements BuscarInterface
         // Definición del Spinner
         spinner = (Spinner) findViewById(R.id.spinnerbuscar);
         spinner.setAdapter(adapter);
+
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+
+            public void onClick(View view) {
+                String resultadoNombre = "";
+                String resultadoFecha = "";
+                String resultadoSpinner = "";
+
+                if (nombre.getText().length() == 0) resultadoNombre = "%"; else resultadoNombre = "%" + nombre.getText().toString()+"%";
+                if (etFecha.getText().length() == 0) resultadoFecha = "%"; else resultadoFecha = etFecha.getText().toString();
+                if (spinner.getSelectedItem().toString().length() == 0) resultadoSpinner = "%"; else resultadoSpinner = spinner.getSelectedItem().toString();
+                presenter.filtrar(resultadoNombre, resultadoFecha, resultadoSpinner);
+
+                //Intent i = getIntent();
+                //i.putExtra("RESULTADO", resultado);
+                // setResult(RESULT_OK, i);
+
+                // Finalizamos la Activity para volver a la anterior
+                finish();
+            }
+        });
     }
-    private void obtenerFecha(){
-        DatePickerDialog recogerFecha = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener(){
+
+    private void obtenerFecha() {
+        DatePickerDialog recogerFecha = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 //Esta variable lo que realiza es aumentar en uno el mes ya que comienza desde 0 = enero
                 final int mesActual = month + 1;
                 //Formateo el día obtenido: antepone el 0 si son menores de 10
-                String diaFormateado = (dayOfMonth < 10)? CERO + String.valueOf(dayOfMonth):String.valueOf(dayOfMonth);
+                String diaFormateado = (dayOfMonth < 10) ? CERO + String.valueOf(dayOfMonth) : String.valueOf(dayOfMonth);
                 //Formateo el mes obtenido: antepone el 0 si son menores de 10
-                String mesFormateado = (mesActual < 10)? CERO + String.valueOf(mesActual):String.valueOf(mesActual);
+                String mesFormateado = (mesActual < 10) ? CERO + String.valueOf(mesActual) : String.valueOf(mesActual);
                 //Muestro la fecha con el formato deseado
                 etFecha.setText(diaFormateado + BARRA + mesFormateado + BARRA + year);
 
             }
 
-        },anio, mes, dia);
+        }, anio, mes, dia);
         //Muestro el widget
         recogerFecha.show();
 
     }
+
     @Override
-    protected  void onStart(){
+    protected void onStart() {
         super.onStart();
-        Log.d(TAG,"onStart...");
+        Log.d(TAG, "onStart...");
     }
+
     @Override
-    protected  void onResume(){
+    protected void onResume() {
         super.onResume();
-        Log.d(TAG,"onResume...");
+        Log.d(TAG, "onResume...");
     }
+
     @Override
-    protected  void onPause(){
+    protected void onPause() {
         super.onPause();
-        Log.d(TAG,"onPause...");
+        Log.d(TAG, "onPause...");
     }
+
     @Override
-    protected  void onStop(){
+    protected void onStop() {
         super.onStop();
-        Log.d(TAG,"onStop...");
+        Log.d(TAG, "onStop...");
     }
+
     @Override
-    protected  void onRestart(){
+    protected void onRestart() {
         super.onRestart();
-        Log.d(TAG,"onRestart...");
+        Log.d(TAG, "onRestart...");
     }
+
     @Override
-    protected  void onDestroy(){
+    protected void onDestroy() {
         super.onDestroy();
-        Log.d(TAG,"onDestroy...");
+        Log.d(TAG, "onDestroy...");
     }
+
     @Override
     public void volverListado() {
-        Log.d(TAG,"Volviendo a Listado...");
+        Log.d(TAG, "Volviendo a Listado...");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Log.d(TAG,"onBackPressed...");
+        Log.d(TAG, "onBackPressed...");
         finish();
     }
 
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
-        Log.d(TAG,"onSupportnavigateUp...");
+        Log.d(TAG, "onSupportnavigateUp...");
         return super.onSupportNavigateUp();
     }
 }

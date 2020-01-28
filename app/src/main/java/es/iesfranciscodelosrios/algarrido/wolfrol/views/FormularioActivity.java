@@ -21,26 +21,30 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.app.ActivityCompat;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
+
 import es.iesfranciscodelosrios.algarrido.wolfrol.R;
 import es.iesfranciscodelosrios.algarrido.wolfrol.interfaces.FormularioInterface;
 import es.iesfranciscodelosrios.algarrido.wolfrol.models.Personaje;
 import es.iesfranciscodelosrios.algarrido.wolfrol.presenters.FormularioPresenter;
 
 
-public class FormularioActivity extends AppCompatActivity implements FormularioInterface.View{
-    String TAG="WolfRol/FormularioActivity";
+public class FormularioActivity extends AppCompatActivity implements FormularioInterface.View {
+    String TAG = "WolfRol/FormularioActivity";
     private FormularioInterface.Presenter presenter;
     private Spinner spinner;
     private ArrayAdapter<String> adapter;
@@ -65,15 +69,16 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
     TextInputEditText pesoo;
     TextInputEditText generoo;
     EditText historiaa;
-
+    String razas;
     View v;
     TextInputLayout pesoInputLayout;
     final Context context = this;
     FloatingActionButton delete;
     ImageView gallery;
-    final private int CODE_READ_EXTERNAL_STORAGE_PERMISSION=123;
+    final private int CODE_READ_EXTERNAL_STORAGE_PERMISSION = 123;
     private Uri uri;
     FloatingActionButton guardar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,7 +98,7 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
 
-        presenter.validacionCampoPeso(hasFocus, pesoInputLayout, p,guardar);
+                presenter.validacionCampoPeso(hasFocus, pesoInputLayout, p, guardar);
 
 
             }
@@ -102,17 +107,18 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
         f.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                presenter.validacionCampoFecha(hasFocus,f);
+                presenter.validacionCampoFecha(hasFocus, f);
             }
         });
 
         // Definición de la lista de opciones------------------------------------
-        ArrayList<String> items = new ArrayList<String>();
-        items.add("Elfo");
+        final ArrayList<String> items = new ArrayList<String>();
+        items.add("");
+      /*  items.add("Elfo");
         items.add("Orco");
         items.add("Semi Elfo");
         items.add("Humano");
-
+*/
         // Definición del Adaptador que contiene la lista de opciones
         adapter = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, items);
         adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
@@ -124,6 +130,7 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
         // Definición de la acción del botón
         button = (FloatingActionButton) findViewById(R.id.floatingActionButtonAdd);
         button.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
                 // Recuperación de la vista del AlertDialog a partir del layout de la Actividad
@@ -147,6 +154,7 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialogBox, int id) {
                                         adapter.add(dialogInput.getText().toString());
+                                        presenter.guardarRaza(dialogInput.getText().toString());
                                         spinner.setSelection(adapter.getPosition(dialogInput.getText().toString()));
                                     }
                                 })
@@ -158,7 +166,7 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
                                     }
                                 })
                         .create()
-                .show();
+                        .show();
             }
         });
 
@@ -182,7 +190,8 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
         pesoo = (TextInputEditText) findViewById(R.id.peso);
         generoo = (TextInputEditText) findViewById(R.id.genero);
         historiaa = (EditText) findViewById(R.id.editTextHistoria);
-                fab.setOnClickListener(new View.OnClickListener() {
+
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Personaje p = new Personaje();
@@ -190,15 +199,13 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
                 p.setPeso(pesoo.getText().toString());
                 p.setGenero(generoo.getText().toString());
                 p.setHistoria(historiaa.getText().toString());
-                Log.d(TAG,"Pulsando boton flotante...");
-                presenter.guardarFormulario(p,new FormularioPresenter.Callback() {
+                p.setRaza(spinner.getSelectedItem().toString());
+                p.setFecha(etFecha.getText().toString());
+                Log.d(TAG, "Pulsando boton flotante...");
+                presenter.guardarFormulario(p, new FormularioPresenter.Callback() {
                     @Override
                     public void onOk() {
-
                         Toast.makeText(FormularioActivity.this, "Guardando el formulario...", Toast.LENGTH_SHORT).show(); //Correcto
-                        //Intent intent = new Intent(FormularioActivity.this, ListadoActivity.class);
-                        //startActivity(intent);
-                       // finish();
                     }
 
                     @Override
@@ -226,7 +233,7 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
                                     id) {
                                 Personaje p = new Personaje();
 
-                                presenter.guardarFormulario(p,new FormularioPresenter.Callback() {
+                                presenter.guardarFormulario(p, new FormularioPresenter.Callback() {
                                     @Override
                                     public void onOk() {
                                         Toast.makeText(FormularioActivity.this, "Eliminando...", Toast.LENGTH_SHORT).show(); //Correcto
@@ -266,12 +273,12 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
         ///////////////////////////////////////////////////////////////////////////
 
 
-        ImageView iv= findViewById(R.id.imageViewPersonaje);
-        presenter.galeria(gallery,iv,bmp);
+        ImageView iv = findViewById(R.id.imageViewPersonaje);
+        presenter.galeria(gallery, iv, bmp);
     }
 
     @Override
-    public void selectPicture(){
+    public void selectPicture() {
         // Se le pide al sistema una imagen del dispositivo
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -282,7 +289,7 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
     }
 
     @Override
-    public void cerrarFormulario(){
+    public void cerrarFormulario() {
         finish();
     }
 
@@ -319,35 +326,35 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
         }
     }
 
-    private void obtenerFecha(){
-        DatePickerDialog recogerFecha = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener(){
+    private void obtenerFecha() {
+        DatePickerDialog recogerFecha = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 //Esta variable lo que realiza es aumentar en uno el mes ya que comienza desde 0 = enero
                 final int mesActual = month + 1;
                 //Formateo el día obtenido: antepone el 0 si son menores de 10
-                String diaFormateado = (dayOfMonth < 10)? CERO + String.valueOf(dayOfMonth):String.valueOf(dayOfMonth);
+                String diaFormateado = (dayOfMonth < 10) ? CERO + String.valueOf(dayOfMonth) : String.valueOf(dayOfMonth);
                 //Formateo el mes obtenido: antepone el 0 si son menores de 10
-                String mesFormateado = (mesActual < 10)? CERO + String.valueOf(mesActual):String.valueOf(mesActual);
+                String mesFormateado = (mesActual < 10) ? CERO + String.valueOf(mesActual) : String.valueOf(mesActual);
                 //Muestro la fecha con el formato deseado
                 etFecha.setText(diaFormateado + BARRA + mesFormateado + BARRA + year);
 
             }
 
-        },anio, mes, dia);
+        }, anio, mes, dia);
         //Muestro el widget
         recogerFecha.show();
     }
 
     @Override
     public void volverListado() {
-        Log.d(TAG,"Volviendo a Listado...");
+        Log.d(TAG, "Volviendo a Listado...");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
     public void requestPermision() {
-        ActivityCompat.requestPermissions(FormularioActivity.this, new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, CODE_READ_EXTERNAL_STORAGE_PERMISSION);
+        ActivityCompat.requestPermissions(FormularioActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, CODE_READ_EXTERNAL_STORAGE_PERMISSION);
 
     }
 
@@ -356,21 +363,21 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
         switch (requestCode) {
             case CODE_READ_EXTERNAL_STORAGE_PERMISSION:
 
-                    presenter.resultPermission(grantResults[0], new FormularioPresenter.Callback() {
-                        @Override
-                        public void onOk() {
-                            Log.d(TAG, getResources().getString(R.string.permisoOk));
-                        }
+                presenter.resultPermission(grantResults[0], new FormularioPresenter.Callback() {
+                    @Override
+                    public void onOk() {
+                        Log.d(TAG, getResources().getString(R.string.permisoOk));
+                    }
 
-                        @Override
-                        public void onError(String errMsg) {
-                            CoordinatorLayout coordinatorLayout = findViewById(R.id.CoordinatorLayout);
+                    @Override
+                    public void onError(String errMsg) {
+                        CoordinatorLayout coordinatorLayout = findViewById(R.id.CoordinatorLayout);
 
-                            Snackbar snackbar = Snackbar
-                                    .make(coordinatorLayout, getResources().getString(R.string.permiso), Snackbar.LENGTH_LONG);
-                            snackbar.show();
-                        }
-                    });
+                        Snackbar snackbar = Snackbar
+                                .make(coordinatorLayout, getResources().getString(R.string.permiso), Snackbar.LENGTH_LONG);
+                        snackbar.show();
+                    }
+                });
 
                 break;
             default:
@@ -380,47 +387,52 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
 
 
     @Override
-    protected  void onStart(){
+    protected void onStart() {
         super.onStart();
-        Log.d(TAG,"onStart...");
+        Log.d(TAG, "onStart...");
     }
+
     @Override
-    protected  void onResume(){
+    protected void onResume() {
         super.onResume();
-        Log.d(TAG,"onResume...");
+        Log.d(TAG, "onResume...");
     }
+
     @Override
-    protected  void onPause(){
+    protected void onPause() {
         super.onPause();
-        Log.d(TAG,"onPause...");
+        Log.d(TAG, "onPause...");
     }
+
     @Override
-    protected  void onStop(){
+    protected void onStop() {
         super.onStop();
-        Log.d(TAG,"onStop...");
+        Log.d(TAG, "onStop...");
     }
+
     @Override
-    protected  void onRestart(){
+    protected void onRestart() {
         super.onRestart();
-        Log.d(TAG,"onRestart...");
+        Log.d(TAG, "onRestart...");
     }
+
     @Override
-    protected  void onDestroy(){
+    protected void onDestroy() {
         super.onDestroy();
-        Log.d(TAG,"onDestroy...");
+        Log.d(TAG, "onDestroy...");
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Log.d(TAG,"onBackPressed...");
+        Log.d(TAG, "onBackPressed...");
         finish();
     }
 
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
-        Log.d(TAG,"onSupportnavigateUp...");
+        Log.d(TAG, "onSupportnavigateUp...");
         return super.onSupportNavigateUp();
     }
 

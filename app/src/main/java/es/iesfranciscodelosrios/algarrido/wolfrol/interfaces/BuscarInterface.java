@@ -2,13 +2,16 @@ package es.iesfranciscodelosrios.algarrido.wolfrol.interfaces;
 
 public interface BuscarInterface {
 
-    public interface View{
+    public interface View {
 
         void volverListado();
     }
 
-    public interface Presenter{
+    public interface Presenter {
 
         void botonVolver();
+
+        void filtrar(String nombre, String fecha,String raza);
     }
+
 }

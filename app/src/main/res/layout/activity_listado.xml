@@ -21,8 +21,8 @@
             app:navigationIcon="@android:drawable/ic_menu_sort_by_size"
             app:popupTheme="@style/AppTheme.PopupOverlay"
             app:title="WolfRol"
-            app:titleMargin="16px"
-            app:titleMarginStart="200px" />
+            app:titleMargin="16dp"
+            app:titleMarginStart="120dp" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -46,6 +46,7 @@
         android:layout_width="48dp"
         android:layout_height="42dp"
         android:background="#FF9800"
-        app:srcCompat="@android:drawable/ic_menu_sort_by_size" />
+        app:srcCompat="@android:drawable/ic_menu_sort_by_size"
+        android:contentDescription="@string/sobreMi" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

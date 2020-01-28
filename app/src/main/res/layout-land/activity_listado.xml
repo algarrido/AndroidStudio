@@ -21,8 +21,8 @@
             app:navigationIcon="@android:drawable/ic_menu_sort_by_size"
             app:popupTheme="@style/AppTheme.PopupOverlay"
             app:title="WolfRol"
-            app:titleMargin="16px"
-            app:titleMarginStart="200px" />
+            app:titleMargin="16dp"
+            app:titleMarginStart="120dp" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
