@@ -1,5 +1,6 @@
 package es.iesfranciscodelosrios.algarrido.wolfrol.models;
 
+import android.app.Person;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -7,10 +8,8 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-import android.widget.ArrayAdapter;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import es.iesfranciscodelosrios.algarrido.wolfrol.views.MyApplication;
 
@@ -24,10 +23,7 @@ public class PersonajeModel extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    public static synchronized PersonajeModel getInstance() { //quitar la variable del contexto y crearla global
-        // Use the application context, which will ensure that you
-        // don't accidentally leak an Activity's context.
-        // See this article for more information: http://bit.ly/6LRzfx
+    public static synchronized PersonajeModel getInstance() {
         if (sInstance == null) {
             sInstance = new PersonajeModel(MyApplication.getContext()); //esto ha acmabiado
         }
@@ -43,13 +39,23 @@ public class PersonajeModel extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) { //se ejecuta una vez y yasta, eliminar caché o el fichero oculto (carpeta data/data/y busca la aplicacion.)
         String CREATE_TABLE_PERSONAJE = "CREATE TABLE Personaje (id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "nombre TEXT,peso TEXT, genero TEXT,historia TEXT,imagen TEXT,raza TEXT,fecha TEXT)";
+                "nombre TEXT,peso TEXT, genero TEXT,historia TEXT,imagen TEXT,raza TEXT,fecha TEXT,partida TEXT)";
+
         String CREATE_TABLE_RAZA = "CREATE TABLE Raza (id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "nombre TEXT)";
+
+
         try {
             if (db != null) {
                 db.execSQL(CREATE_TABLE_PERSONAJE);
                 db.execSQL(CREATE_TABLE_RAZA);
+
+              /*  ContentValues values = new ContentValues();
+                values.put("nombre", "Lug");
+                values.put("historia", "Desde pequeño se intereso por el ejército, y a los 19 años ya había ingresado en el, en la división de infantería. A los 21 años, ocurrirá el suceso que más cambiará la personalidad de Ceryon: la muerte de su padre");
+
+                // Insertar...
+                db.insert("Personaje", null, values);*/
                 Log.d("PersonajeModel", CREATE_TABLE_PERSONAJE);
 
             }
@@ -71,7 +77,6 @@ public class PersonajeModel extends SQLiteOpenHelper {
         Personaje personaje = new Personaje();
 
         SQLiteDatabase db = getWritableDatabase();
-        // ArrayList<Personaje> listBD = new ArrayList<Personaje>();
         ArrayList<Personaje> listSQL = new ArrayList<Personaje>();
 
         try {
@@ -147,13 +152,13 @@ public class PersonajeModel extends SQLiteOpenHelper {
             personaje10.setNombre("Stygh");
             personaje10.setHistoria("Stygh es recatado y escrupuloso, tiene una gran vocación de servicio espirtual. Profesa profundamente la fé en que \"todo camino errado puede desandarse\". Tiene un hermano mellizo, Rom, que es más vivaz y pasional, aunque comparte con su hermano una muy buena fe, profesa las creencias de su gente pero serpentea por experiencias que nada tienen que ver con ellas. Suelen acompañarse uno al otro.");
 
-            list.add(personaje4);
+            list.add(personaje10);
 
             db.beginTransaction();
-            String[] campos = new String[]{"id", "nombre", "peso", "genero", "historia","raza"};
+            String[] campos = new String[]{"id", "nombre", "peso", "genero", "historia", "raza", "imagen"};
             Cursor c = db.query("Personaje", campos, null, null, null, null, null);
             if (c.moveToFirst()) {
-                //Recorremos el cursor hasta que no haya más registros
+
                 do {
                     Personaje p = new Personaje();
                     String id = c.getString(c.getColumnIndex("id"));
@@ -165,10 +170,14 @@ public class PersonajeModel extends SQLiteOpenHelper {
                     String historia = c.getString(c.getColumnIndex("historia"));
                     p.setHistoria(historia);
 
+
+                     //String imagen=c.getString(c.getColumnIndex("imagen"));
+                    // p.setImagen(imagen);
+
                     listSQL.add(p);
 
-                    Log.d("PersonajeModel", p.getNombre());
-                    //  Log.d("PersonajeModel", String.valueOf(p.getId()));
+                    //Log.d("PersonajeModel", p.getNombre());
+
 
                 } while (c.moveToNext());
 
@@ -176,7 +185,6 @@ public class PersonajeModel extends SQLiteOpenHelper {
         } catch (Exception e) {
             // Log.d("PersonajeModel", "Salta excepcion");
         } finally {
-
             // Log.d("PersonajeModel", "finally");
             db.endTransaction();
             db.close();
@@ -191,45 +199,48 @@ public class PersonajeModel extends SQLiteOpenHelper {
         return list;
     }
 
-    public boolean buscar(String nombre, String fecha,String raza) {
-        Log.d("nombre",nombre);
-        Log.d("fecha",fecha);
-        Log.d("raza",raza);
-       SQLiteDatabase db = getWritableDatabase();
-        Personaje p = new Personaje();
-        //String[] campos = new String[]{"id", "nombre", "peso", "genero", "historia","fecha","raza"};
-        String[] args = new String[]{nombre,fecha,raza};
-       // String[] args = new String[] {"usu1"};
-        Log.d("Buscar",nombre+"1");
-        Log.d("Buscar",args.toString());
-        Cursor cc = db.rawQuery(" SELECT nombre FROM Personaje WHERE nombre like ? AND fecha = ? AND raza=?", args);
-        Log.d("Buscar",nombre+"2");
-        Log.d("Buscar",cc.toString());
+    public ArrayList<Personaje> buscar(String nombre, String fecha, String raza) {
+
+        ArrayList<Personaje> list = new ArrayList<Personaje>();
+        SQLiteDatabase db = getWritableDatabase();
+        db.beginTransaction();
+        try {
+            String[] args = new String[]{nombre, fecha, raza};
+            Cursor c = db.rawQuery("SELECT * FROM Personaje WHERE nombre like ? AND fecha like ? AND raza like ?", args);
+//          Cursor c = db.rawQuery("SELECT nombre FROM Personaje WHERE nombre like ? AND fecha = ? AND raza=?", args);
+            Log.d("Buscar", "SELECT nombre FROM Personaje WHERE nombre like ? AND fecha = ? AND raza=?" + args);
+            if (c.moveToFirst()) {
+                Log.d("Buscar", nombre + "3");
+                do {
+                    Personaje p = new Personaje();
+                    String id = c.getString(c.getColumnIndex("id"));
+                    p.setId(Integer.parseInt(id));
+
+                    nombre = c.getString(c.getColumnIndex("nombre"));
+                    p.setNombre(nombre);
+
+                    String historia = c.getString(c.getColumnIndex("historia"));
+                    p.setHistoria(historia);
+
+//                     fecha = c.getString(c.getColumnIndex("fecha"));
+//                    p.setFecha(fecha);
+
+                    Log.d("Buscar", nombre + " metodo buscar nombre");
+                    Log.d("Buscar", fecha + " metodo buscar fecha");
 
 
-        // Cursor c = db.query("Usuarios", campos, "nombre=?", args, null, null, null);
+                    list.add(p);
+                } while (c.moveToNext());
+            }
+        } catch (Exception e) {
+            Log.d("Buscar", "errooooooooooooooooooooooor");
+        } finally {
 
-        //Nos aseguramos de que existe al menos un registro
-        if (cc.moveToFirst()) {
-            //Recorremos el cursor hasta que no haya más registros
-            Log.d("Buscar",nombre+"3");
-
-            do {
-                Log.d("Buscar",nombre+"4");
-
-                String id = cc.getString(cc.getColumnIndex("id"));
-                Log.d("Buscar",nombre+"5");
-
-                p.setId(Integer.parseInt(id));
-                Log.d("Buscar",nombre+"6");
-
-                nombre = cc.getString(cc.getColumnIndex("nombre"));
-                Log.d("Buscar",nombre+"7");
-
-                p.setNombre(nombre);
-            } while (cc.moveToNext());
+            db.endTransaction();
+            db.close();
         }
-        return true;
+
+        return list;
     }
 
     public boolean addNewPersonaje(Personaje p) {
@@ -237,24 +248,22 @@ public class PersonajeModel extends SQLiteOpenHelper {
         boolean correcto = true;
         db.beginTransaction();
         try {
-            // The user might already exist in the database (i.e. the same user created multiple posts).
-
             ContentValues values = new ContentValues();
             values.put("nombre", p.getNombre());
             values.put("peso", p.getPeso());
             values.put("genero", p.getGenero());
             values.put("historia", p.getHistoria());
             values.put("imagen", p.getImagen());
-            values.put("fecha",p.getFecha().toString());
-            values.put("raza",p.getRaza());
-            // values.put(KEY_POST_TEXT, post.text);
-            //Log.d("PersonajeModel", p.getNombre());
-            // Notice how we haven't specified the primary key. SQLite auto increments the primary key column.
+            values.put("fecha", p.getFecha().toString());
+            values.put("raza", p.getRaza());
+            values.put("partida", p.isPartida());
+
             db.insertOrThrow("Personaje", null, values);
+            //  db.execSQL("ALTER TABLE Personaje AUTOINCREMENT = 1",null);
             db.setTransactionSuccessful();
-            Log.d("TAG BUENO", "Error while trying to add post to database");
+
         } catch (Exception e) {
-            Log.d("TAG MALO", "Error while trying to add post to database");
+            Log.d("db", "Error while trying to add post to database");
             correcto = false;
 
         } finally {
@@ -266,9 +275,7 @@ public class PersonajeModel extends SQLiteOpenHelper {
 
     public void addNewRaza(String raza) {
         SQLiteDatabase db = getWritableDatabase();
-
         db.beginTransaction();
-        Log.d("qqqqqqqqqqqqqqqqqqqq", raza);
         try {
             ContentValues values = new ContentValues();
             values.put("nombre", raza);
@@ -276,14 +283,90 @@ public class PersonajeModel extends SQLiteOpenHelper {
             db.setTransactionSuccessful();
         } catch (Exception e) {
 
+        } finally {
+            db.endTransaction();
+            db.close();
+        }
+    }
+
+    public ArrayList<String> mostrarRazas() {
+        ArrayList<String> list = new ArrayList<>();
+        boolean entra = true;
+        SQLiteDatabase db = getWritableDatabase();
+        try {
+            db.beginTransaction();
+            String[] campos = new String[]{"id", "nombre", "peso", "genero", "historia", "raza"};
+            Cursor c = db.query("Personaje", campos, null, null, null, null, null);
+            if (c.moveToFirst()) {
+                do {
+                    Personaje p = new Personaje();
+                    String raza = c.getString(c.getColumnIndex("raza"));
+                    p.setRaza(raza);
+                    if (entra) {
+                        list.add("");
+                        entra = false;
+                    }
+                    list.add(raza);
+                } while (c.moveToNext());
+
+            }
+        } catch (Exception e) {
+        } finally {
+
+            db.endTransaction();
+            db.close();
+        }
+        return list;
+    }
+
+    public void eliminar(int id) {
+        SQLiteDatabase db = getWritableDatabase();
+        try {
+            // db.beginTransaction();
+            String[] args = new String[]{String.valueOf(id)};
+            // db.execSQL("DELETE FROM Personaje WHERE id=?", args);
+            int n = db.delete("Personaje", "id=?", args);
+            //  db.execSQL("DELETE FROM Personaje WHERE id=id"); //elimina
+            Log.d("eliminar", String.valueOf(id) + " id");
+            Log.d("eliminar", String.valueOf(n) + " n");
+            if (n != 0) {
+                Log.d("eliminar", "Eliminado");
+            } else {
+                Log.d("eliminar", "No eliminado");
+            }
+        } catch (Exception e) {
+            Log.d("eliminar", "eliminar error" + String.valueOf(id));
+        } finally {
+            //db.endTransaction();
+            db.close();
+        }
+    }
+
+    public void actualizar(String nombre, String peso, String genero, String historia, String imagen, String fecha, String raza, String partida) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.beginTransaction();
+        try {
+            ContentValues valores = new ContentValues();
+            valores.put("nombre", nombre);
+            valores.put("peso", peso);
+            valores.put("genero", genero);
+            valores.put("historia", historia);
+            valores.put("imagen", imagen);
+            valores.put("fecha", fecha);
+            valores.put("raza", raza);
+            valores.put("partida", partida);
+
+            // String[] args = new String[]{"usuario1", "usuario2"};
+            //db.update("Personaje", valores, "nombre=? OR nombre=?", args);
+
+            String[] args = new String[]{nombre, peso, genero, historia, imagen, fecha, raza, partida};
+            db.update("Personaje", valores, "id=?", args);
+        } catch (Exception e) {
 
         } finally {
             db.endTransaction();
             db.close();
-
         }
 
     }
-
-
 }

@@ -29,10 +29,16 @@ public interface FormularioInterface {
         void guardarFormulario(Personaje p,FormularioPresenter.Callback callback);
         void guardarRaza(String raza);
         void eliminarFormulario();
-        void validacionCampoPeso(boolean hasFocus, TextInputLayout nombreInputLayout, TextInputEditText n,FloatingActionButton b);
+        void validacionCampoPeso(boolean hasFocus, TextInputLayout nombreInputLayout, TextInputEditText n,Button b);
         void validacionCampoFecha(boolean hasFocus,EditText editText);
+        void validacionCampoNombre(boolean hasFocus, TextInputLayout nombreInputLayout, TextInputEditText n,Button b);
+        void validacionCampoGenero(boolean hasFocus, TextInputLayout nombreInputLayout, TextInputEditText n,Button b);
+
         void onClickImage(Context c);
         void resultPermission(int result, FormularioPresenter.Callback callback);
         void galeria(ImageView i, ImageView iv, Bitmap bmp);
+        ArrayList<String> getAllRazas();
+        void eliminar(int id);
+        void editar(String nombre, String edad, String genero, String historia, String imagen, String fecha, String raza, String partida);
     }
 }

@@ -1,7 +1,10 @@
 package es.iesfranciscodelosrios.algarrido.wolfrol.presenters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
+import android.widget.EditText;
+import android.widget.Spinner;
 
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -42,12 +45,6 @@ public class ListadoPresenter implements ListadoInterface.Presenter {
 
     @Override
     public ArrayList<Personaje> getAllPersonaje() {
-       // for (Personaje p : personaje.getAllPersonaje()) {
-
-          //  Log.d("ListadoPresenter", p.getNombre());
-
-        //}
-        //Log.d("ListadoPresenter", p.getNombre());
 
         return personaje.getAllPersonaje();
     }
@@ -68,4 +65,23 @@ public class ListadoPresenter implements ListadoInterface.Presenter {
         //adaptador = new RecyclerView(items, this);
         r.setAdapter(a);
     }
+
+    public void recoger(String nombre, String fecha, String spinner) {
+        personaje.buscar(nombre, fecha, spinner);
+    }
+
+    @Override
+    public ArrayList<Personaje> filtrar(String nombre, String fecha, String raza) {
+
+        return personaje.buscar(nombre, fecha, raza);
+
+    }
+    @Override
+    public int eliminar(int id){
+        personaje.eliminar(id);
+        return id;
+    }
+
+
+
 }

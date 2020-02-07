@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputEditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -16,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,14 +35,14 @@ public class ListadoActivity extends AppCompatActivity implements ListadoInterfa
     private ArrayList<Personaje> items;
     RecyclerView recyclerView;
 
+    TextView contador;
+    EditText etFecha;
+    TextInputEditText etNombre;
+    Spinner spinner;
+    View vv;
 
-    TextView etNombre, etApellido;
+    private final static int BUSCAR = 0;
 
-
-    // Estas variables las declaramos al principio de nuestra clase, justo debajo
-// de la cabecera:
-    private final static int NOMBRE = 0;
-    private final static int APELLIDO = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,19 +51,30 @@ public class ListadoActivity extends AppCompatActivity implements ListadoInterfa
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         presenter = new ListadoPresenter(this);
-        etNombre = (TextView) findViewById(R.id.textViewNombre);
-        // etApellido = (EditText)findViewById(R.id.etApellido);
+        etNombre = (TextInputEditText) findViewById(R.id.nombre);
+        //etHistoria = (TextView) findViewById(R.id.textViewHistoria);
+        etFecha = (EditText) findViewById(R.id.editTextFechaF);
+        contador = (TextView) findViewById(R.id.contadorTextView);
+        spinner = (Spinner) findViewById(R.id.spinnerRaza);
 
-        recyclerView = (RecyclerView) findViewById(R.id.listadoReciclesView);
         items = presenter.getAllPersonaje();
+        recyclerView = (RecyclerView) findViewById(R.id.listadoReciclesView);
+
+        int i = items.size();
+
+        contador.setText(i + " resultados encontrados");
         adaptador = new PersonajeAdapter(items);
         adaptador.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Acción al pulsar el elemento
+                vv = v;
                 int position = recyclerView.getChildAdapterPosition(v);
                 Log.d(TAG, "Click RV: " + items.get(position).getId().toString());
+
                 presenter.onClickRecyclerView(items.get(position).getId());
+
+
             }
         });
         recyclerView.setAdapter(adaptador);
@@ -73,11 +86,9 @@ public class ListadoActivity extends AppCompatActivity implements ListadoInterfa
             public void onClick(View view) {
                 Log.d(TAG, "Pulsando boton flotante...");
                 presenter.botonAñadir();
-
             }
         });
         swipeRecyclerView();
-
     }
 
     @Override
@@ -88,12 +99,22 @@ public class ListadoActivity extends AppCompatActivity implements ListadoInterfa
     ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {
         @Override
         public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+
             return false;
         }
 
         @Override
         public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+
+            presenter.eliminar(viewHolder.getAdapterPosition() - 9);
+            //presenter.eliminar(Integer.parseInt(id));
             items.remove(viewHolder.getAdapterPosition());
+            int i = items.size();
+            contador.setText(i + " resultados encontrados");
+
+            Log.d("eliminar", "pasa swiped");
+            Log.d("eliminar", String.valueOf(viewHolder.getAdapterPosition() - 9) + " posicion restada");
+
             adaptador.notifyDataSetChanged();
 
         }
@@ -171,12 +192,34 @@ public class ListadoActivity extends AppCompatActivity implements ListadoInterfa
     @Override
     public void lanzarFormulario(int id) {
         Log.d(TAG, "Lanzando Formulario..");
+
+
         if (id == -1) {
             Intent intent = new Intent(ListadoActivity.this, FormularioActivity.class);
-            startActivity(intent);
+            // startActivity(intent);
+            startActivityForResult(intent, 1);
+
         } else {
             Intent intent = new Intent(ListadoActivity.this, FormularioActivity.class);
-            startActivity(intent);
+            // startActivity(intent);
+            int position = recyclerView.getChildAdapterPosition(vv);
+            Log.d(TAG, "Click RV: " + items.get(position).getId().toString());
+          //  intent.putExtra("ID", items.get(position).getId());
+            Log.d(TAG, "editar " + items.get(position).getId().toString()+ " este del listado");
+
+            intent.putExtra("NOMBRE", items.get(position).getNombre());
+           // intent.putExtra("PESO", items.get(position).getPeso());
+             intent.putExtra("ID", items.get(position).getId());
+//            intent.putExtra("PESO", items.get(position).getPeso());
+//            intent.putExtra("GENERO", items.get(position).getGenero());
+//            intent.putExtra("HISTORIA", items.get(position).getHistoria());
+//            //intent.putExtra("IMAGEN", items.get(position).getImagen());
+//            intent.putExtra("FECHA", items.get(position).getFecha());
+//            //intent.putExtra("RAZA", items.get(position).getRaza());
+//            intent.putExtra("PARTIDA", items.get(position).isPartida());
+
+            startActivityForResult(intent, 1);
+
             //BUNDLE
         }
     }
@@ -191,37 +234,54 @@ public class ListadoActivity extends AppCompatActivity implements ListadoInterfa
     @Override
     public void lanzarBuscar() {
         Log.d(TAG, "Lanzando buscar...");
-        Intent intent = new Intent(ListadoActivity.this, BuscarActivity.class);
-        // startActivity(intent);
-        // Método que se ejecuta al pulsar el botón btNombre:
         Intent i = new Intent(this, BuscarActivity.class);
-        // Iniciamos la segunda actividad, y le indicamos que la iniciamos
-        // para rellenar el nombre:
-        startActivityForResult(intent, NOMBRE);
+        startActivityForResult(i, BUSCAR);
     }
 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        // Comprobamos si el resultado de la segunda actividad es "RESULT_CANCELED".
+        String resultadoNombre = "";
+        String resultadoFecha = "";
+        String resultadoSpinner = "";
+
         if (resultCode == RESULT_CANCELED) {
-            // Si es así mostramos mensaje de cancelado por pantalla.
+
             Toast.makeText(this, "Resultado cancelado", Toast.LENGTH_SHORT)
                     .show();
         } else {
-            // De lo contrario, recogemos el resultado de la segunda actividad.
-            String resultado = data.getExtras().getString("RESULTADO");
-            // Y tratamos el resultado en función de si se lanzó para rellenar el
-            // nombre o el apellido.
-            switch (requestCode) {
-                case NOMBRE:
-                    etNombre.setText(resultado);
-                    break;
-                case APELLIDO:
-                    etApellido.setText(resultado);
-                    break;
+            try {
+                switch (requestCode) {
+                    case BUSCAR:
+                        resultadoNombre = data.getExtras().getString("RESULTADONOMBRE");
+                        resultadoFecha = data.getExtras().getString("RESULTADOFECHA");
+                        resultadoSpinner = data.getExtras().getString("RESULTADOSPINNER");
+                        Log.d("---------", "drctfvgybhunijsxdrc");
+                        Log.d("Buscar", resultadoNombre + " este es el nombre");
+                        Log.d("Buscar", resultadoFecha + " esto la fecha");
+                        Log.d("Buscar", resultadoSpinner + " esto el spinner");
+                        this.items = presenter.filtrar(resultadoNombre, resultadoFecha, resultadoSpinner);
+                        //  adaptador = new PersonajeAdapter(this.items);
+                        int i = items.size();
+                        contador.setText(i + " resultados encontrados");
+                        adaptador = new PersonajeAdapter(items);
+                        recyclerView.setAdapter(adaptador);
+                        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+                        break;
+
+
+                }
+
+            } catch (Exception e) {
+                resultadoNombre = "";
+                resultadoFecha = "";
+                resultadoSpinner = "";
+                Log.d("Buscar", "Error del buscar en listado");
             }
+
+
         }
     }
 }

@@ -20,12 +20,14 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -38,6 +40,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import es.iesfranciscodelosrios.algarrido.wolfrol.R;
+import es.iesfranciscodelosrios.algarrido.wolfrol.interfaces.BuscarInterface;
 import es.iesfranciscodelosrios.algarrido.wolfrol.interfaces.FormularioInterface;
 import es.iesfranciscodelosrios.algarrido.wolfrol.models.Personaje;
 import es.iesfranciscodelosrios.algarrido.wolfrol.presenters.FormularioPresenter;
@@ -46,6 +49,7 @@ import es.iesfranciscodelosrios.algarrido.wolfrol.presenters.FormularioPresenter
 public class FormularioActivity extends AppCompatActivity implements FormularioInterface.View {
     String TAG = "WolfRol/FormularioActivity";
     private FormularioInterface.Presenter presenter;
+
     private Spinner spinner;
     private ArrayAdapter<String> adapter;
     private FloatingActionButton button;
@@ -65,19 +69,21 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
     EditText etFecha;
     Button ibObtenerFecha;
 
-    TextInputEditText nombree;
-    TextInputEditText pesoo;
-    TextInputEditText generoo;
+    TextInputEditText nombree, pesoo, generoo;
     EditText historiaa;
     String razas;
     View v;
     TextInputLayout pesoInputLayout;
+    TextInputLayout nombreInputLayout;
+    TextInputLayout generoInputLayout;
     final Context context = this;
-    FloatingActionButton delete;
     ImageView gallery;
     final private int CODE_READ_EXTERNAL_STORAGE_PERMISSION = 123;
     private Uri uri;
-    FloatingActionButton guardar;
+    Button guardar;
+    Switch partida;
+    Button btn;
+    Button editar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,10 +95,14 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
         presenter = new FormularioPresenter(this);
         presenter.botonVolver();
 //-----------------------------------VALIDACION DE CAMPOS-----------------------------------------
-        guardar = (FloatingActionButton) findViewById(R.id.floatingActionButtonGuardar);
+        guardar = (Button) findViewById(R.id.ButtonGuardar);
         pesoInputLayout = (TextInputLayout) findViewById(R.id.TextPeso);
-        final TextInputEditText p = (TextInputEditText) findViewById(R.id.peso);
+        nombreInputLayout = (TextInputLayout) findViewById(R.id.TextNombre);
+        generoInputLayout = (TextInputLayout) findViewById(R.id.TextGenero);
 
+        final TextInputEditText p = (TextInputEditText) findViewById(R.id.peso);
+        final TextInputEditText n=(TextInputEditText)findViewById(R.id.nombre);
+        final TextInputEditText g=(TextInputEditText)findViewById(R.id.genero);
 
         p.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -111,14 +121,29 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
             }
         });
 
+        n.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+
+                presenter.validacionCampoNombre(hasFocus, nombreInputLayout, n, guardar);
+
+
+            }
+        });
+        g.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+
+                presenter.validacionCampoGenero(hasFocus, generoInputLayout, g, guardar);
+
+
+            }
+        });
         // Definición de la lista de opciones------------------------------------
-        final ArrayList<String> items = new ArrayList<String>();
-        items.add("");
-      /*  items.add("Elfo");
-        items.add("Orco");
-        items.add("Semi Elfo");
-        items.add("Humano");
-*/
+        ArrayList<String> items = new ArrayList<String>();
+
+        items = presenter.getAllRazas();
+
         // Definición del Adaptador que contiene la lista de opciones
         adapter = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, items);
         adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
@@ -185,12 +210,12 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
         });
 
 //--------------------------------------------BOTON GUARDAR-------------------------------------------
-        FloatingActionButton fab = findViewById(R.id.floatingActionButtonGuardar);
+        Button fab = findViewById(R.id.ButtonGuardar);
         nombree = (TextInputEditText) findViewById(R.id.nombre);
         pesoo = (TextInputEditText) findViewById(R.id.peso);
         generoo = (TextInputEditText) findViewById(R.id.genero);
         historiaa = (EditText) findViewById(R.id.editTextHistoria);
-
+        partida = (Switch) findViewById(R.id.switchEnPartida);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -201,7 +226,13 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
                 p.setHistoria(historiaa.getText().toString());
                 p.setRaza(spinner.getSelectedItem().toString());
                 p.setFecha(etFecha.getText().toString());
-                Log.d(TAG, "Pulsando boton flotante...");
+                p.setImagen(gallery.getDrawable().toString());
+                if (partida.isChecked()) {
+                    p.setPartida(partida.getText().toString());
+                } else {
+                    p.setPartida("Fuera de partida");
+                }
+
                 presenter.guardarFormulario(p, new FormularioPresenter.Callback() {
                     @Override
                     public void onOk() {
@@ -217,7 +248,7 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
         });
 
         //------------------------------BOTON ELIMINAR---------------------------------------------------
-        FloatingActionButton btn = findViewById(R.id.floatingActionButtonEliminar);
+        btn = findViewById(R.id.ButtonEliminar);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View vieww) {
@@ -225,27 +256,25 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
                 dialog.setTitle(R.string.Borrado);
                 dialog.setMessage(R.string.mensaje);
                 dialog.setCancelable(true);
-
+                // Log.d("eliminar", id);
+                //final String i= getIntent().getExtras().getString("ID").toString();
                 dialog.setPositiveButton(
                         "Sí",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int
                                     id) {
-                                Personaje p = new Personaje();
+                                // String iid = getIntent().getExtras().getString("ID");
 
-                                presenter.guardarFormulario(p, new FormularioPresenter.Callback() {
-                                    @Override
-                                    public void onOk() {
-                                        Toast.makeText(FormularioActivity.this, "Eliminando...", Toast.LENGTH_SHORT).show(); //Correcto
-                                        Intent intent = new Intent(FormularioActivity.this, ListadoActivity.class);
-                                        startActivity(intent);
-                                    }
+                                //Personaje p = new Personaje();
+                               // p.setId(Integer.parseInt(getIntent().getExtras().getString("ID")));
+                                //Log.d("editar",idd+" este justo antes del eliminar");
+                                presenter.eliminar(1);
+                                Log.d("editar",getIntent().getExtras().getString("ID") +" este justo antes del eliminar");
+                                Log.d("eliminar", "pasa");
 
-                                    @Override
-                                    public void onError(String errMsg) {
-                                        Toast.makeText(FormularioActivity.this, errMsg, Toast.LENGTH_SHORT).show(); //error
-                                    }
-                                });
+                                Intent intent = new Intent(FormularioActivity.this, ListadoActivity.class);
+                                startActivity(intent);
+
                             }
                         });
                 dialog.setNegativeButton(
@@ -261,6 +290,29 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
             }
 
         });
+
+        editar = (Button) findViewById(R.id.ButtonEditar);
+        editar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View vieww) {
+                //nombree.setText(getIntent().getExtras().get("NOMBRE").toString());
+                Personaje p = new Personaje();
+
+              //  p.setNombre(nombree.getText().toString());
+               String n = nombree.getText().toString();
+               String pe = pesoo.getText().toString();
+               String g = generoo.getText().toString();
+               String h = historiaa.getText().toString();
+               String i = gallery.getDrawable().toString();
+               String f = etFecha.getText().toString();
+               String r = spinner.getSelectedItem().toString();
+               String pa = partida.getText().toString();
+
+               Log.d("editar", n + " dentro del boton editar");
+               presenter.editar(n, n, n, n, n, n, n, n);
+
+            }
+        });
         //////////////////////////////////PERMISO PARA GALERIA////////////////////////////////////////////
         gallery = (ImageView) findViewById(R.id.imageViewPersonaje);
         gallery.setClickable(true);
@@ -275,6 +327,31 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
 
         ImageView iv = findViewById(R.id.imageViewPersonaje);
         presenter.galeria(gallery, iv, bmp);
+
+        //////////////////////
+
+        try {
+            this.nombree.setText(getIntent().getExtras().getString("NOMBRE").toString());
+            //this.pesoo.setText(getIntent().getExtras().getString("PESO").toString());
+
+//            this.generoo.setText(getIntent().getExtras().get("GENERO").toString());
+//            this.historiaa.setText(getIntent().getExtras().get("HISTORIA").toString());
+//            this.etFecha.setText(getIntent().getExtras().get("FECHA").toString());
+//            //this.gallery.get(getIntent().getExtras().get("IMAGEN").toString());
+//            // this.spinner.setOnItemSelectedListener(getIntent().getExtras().getInt("CURR_NOTE_CATEGORY");
+//            this.partida.setText(getIntent().getExtras().get("PARTIDA").toString());
+
+            Log.d("editar", this.nombree.getText().toString() + " nombre del try");
+
+
+            //  Log.d("editar", this.pesoo.getText().toString() + " este despues");
+            this.guardar.setVisibility(View.INVISIBLE);
+
+        } catch (Exception e) {
+            this.btn.setVisibility(View.INVISIBLE);
+            this.editar.setVisibility(View.INVISIBLE);
+        }
+
     }
 
     @Override
@@ -291,12 +368,16 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
     @Override
     public void cerrarFormulario() {
         finish();
+        Intent intent = new Intent(FormularioActivity.this, ListadoActivity.class);
+        // startActivity(intent);
+        startActivityForResult(intent, 1);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         super.onActivityResult(requestCode, resultCode, data);
+
         switch (requestCode) {
 
             case (REQUEST_SELECT_IMAGE):

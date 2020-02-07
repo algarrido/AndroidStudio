@@ -1,5 +1,12 @@
 package es.iesfranciscodelosrios.algarrido.wolfrol.interfaces;
 
+
+import android.widget.EditText;
+import android.widget.Spinner;
+
+import java.util.ArrayList;
+
+
 public interface BuscarInterface {
 
     public interface View {
@@ -11,7 +18,12 @@ public interface BuscarInterface {
 
         void botonVolver();
 
-        void filtrar(String nombre, String fecha,String raza);
+        ArrayList<String> getAllRazas();
+
+        void filtrar(String resultadoNombre,
+                     String resultadoFecha,
+                     String resultadoSpinner,
+                     EditText nombre, EditText etFecha, Spinner spinner);
     }
 
 }

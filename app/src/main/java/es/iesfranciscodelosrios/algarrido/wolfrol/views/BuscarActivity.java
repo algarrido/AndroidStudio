@@ -26,6 +26,7 @@ import java.util.Date;
 
 import es.iesfranciscodelosrios.algarrido.wolfrol.R;
 import es.iesfranciscodelosrios.algarrido.wolfrol.interfaces.BuscarInterface;
+import es.iesfranciscodelosrios.algarrido.wolfrol.models.Personaje;
 import es.iesfranciscodelosrios.algarrido.wolfrol.presenters.BuscarPresenter;
 
 public class BuscarActivity extends AppCompatActivity implements BuscarInterface.View {
@@ -35,6 +36,9 @@ public class BuscarActivity extends AppCompatActivity implements BuscarInterface
     private static final String CERO = "0";
     private static final String BARRA = "/";
     private ArrayAdapter<String> adapter;
+    private ArrayList<String> razas;
+    private PersonajeAdapter adaptador;
+
     private Spinner spinner;
     //Calendario para obtener fecha
     public final Calendar c = Calendar.getInstance();
@@ -72,19 +76,23 @@ public class BuscarActivity extends AppCompatActivity implements BuscarInterface
         presenter = new BuscarPresenter(this);
         presenter.botonVolver();
         ArrayList<String> items = new ArrayList<String>();
-        items.add("Elfo");
-        items.add("Orco");
-        items.add("Semi Elfo");
-        items.add("Humano");
+
+        //items.add("Orco");
+        //items.add("Semi Elfo");
+        //items.add("Humano");
+        // items.add("");
+        items = presenter.getAllRazas();
 
         // Definición del Adaptador que contiene la lista de opciones
         adapter = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, items);
         adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
 
+        // adaptador = new PersonajeAdapter(items);
         // Definición del Spinner
         spinner = (Spinner) findViewById(R.id.spinnerbuscar);
         spinner.setAdapter(adapter);
 
+//BUSCAR
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,17 +101,22 @@ public class BuscarActivity extends AppCompatActivity implements BuscarInterface
                 String resultadoNombre = "";
                 String resultadoFecha = "";
                 String resultadoSpinner = "";
+                if (nombre.getText().length() == 0) resultadoNombre = "%";
+                else resultadoNombre = "%" + nombre.getText().toString() + "%";
 
-                if (nombre.getText().length() == 0) resultadoNombre = "%"; else resultadoNombre = "%" + nombre.getText().toString()+"%";
-                if (etFecha.getText().length() == 0) resultadoFecha = "%"; else resultadoFecha = etFecha.getText().toString();
-                if (spinner.getSelectedItem().toString().length() == 0) resultadoSpinner = "%"; else resultadoSpinner = spinner.getSelectedItem().toString();
-                presenter.filtrar(resultadoNombre, resultadoFecha, resultadoSpinner);
+                if (etFecha.getText().length() == 0) resultadoFecha = "%";
+                else resultadoFecha =etFecha.getText().toString();
 
-                //Intent i = getIntent();
-                //i.putExtra("RESULTADO", resultado);
-                // setResult(RESULT_OK, i);
+                if (spinner.getSelectedItem().toString().length() == 0) resultadoSpinner = "%";
+                else resultadoSpinner = spinner.getSelectedItem().toString();
 
-                // Finalizamos la Activity para volver a la anterior
+                Intent i = getIntent();
+
+                i.putExtra("RESULTADONOMBRE", resultadoNombre);
+                i.putExtra("RESULTADOFECHA", resultadoFecha);
+                i.putExtra("RESULTADOSPINNER", resultadoSpinner);
+                setResult(RESULT_OK, i);
+
                 finish();
             }
         });

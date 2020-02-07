@@ -20,8 +20,19 @@ public class Personaje {
     private String fecha = null;
     private String genero;
     private String raza;
+    private String partida;
 
     public Personaje() {
+
+    }
+
+    public String isPartida() {
+        return partida;
+    }
+
+    public void setPartida(String partida) {
+
+        this.partida = partida;
 
     }
 
@@ -50,14 +61,14 @@ public class Personaje {
 
         Pattern patron = Pattern.compile(REGEX_LETRAS);
         String stCampoLetra = peso.toString().trim();
-        //   if (patron.matcher(stCampoLetra).matches()) { //expresion regular- todos los set
-        //     Log.d(TAG, "Campo peso incorrecto");
-        //   return false;
-        // } else {
+           if (patron.matcher(stCampoLetra).matches() || peso.isEmpty()) {
+             Log.d(TAG, "Campo peso incorrecto");
+           return false;
+         } else {
         this.peso = peso;
-        //  Log.d(TAG, "Campo peso correcto");
+          Log.d(TAG, "Campo peso correcto");
         return true;
-        //}
+        }
 
     }
 
@@ -68,7 +79,7 @@ public class Personaje {
     public boolean setGenero(String genero) {
         Pattern patron = Pattern.compile(REGEX_LETRAS);
         String stCampoLetra = genero.toString().trim();
-        if (patron.matcher(stCampoLetra).matches()) { //expresion regular- todos los set
+        if (patron.matcher(stCampoLetra).matches() || genero.isEmpty()) { //expresion regular- todos los set
             this.genero = genero;
             Log.d(TAG, "Campo genero correcto");
             return true;
@@ -90,8 +101,13 @@ public class Personaje {
         return imagen;
     }
 
-    public void setImagen(String imagen) {
-        this.imagen = imagen;
+    public boolean setImagen(String imagen) {
+        if (!imagen.isEmpty()) {
+            this.imagen = imagen;
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public String getNombre() {
@@ -99,16 +115,12 @@ public class Personaje {
     }
 
     public boolean setNombre(String nombre) {
-        // Pattern patron = Pattern.compile(REGEX_LETRAS);
-        // String stCampoLetra = nombre.toString().trim();
-        //if (patron.matcher(stCampoLetra).matches()) { //expresion regular- todos los set
-        this.nombre = nombre;
-        //  Log.d(TAG, "Campo nombre correcto");
-        return true;
-        //} else {
-        //  Log.d(TAG, "Campo nombre incorrecto");
-        //return false;
-        //}
+        if (!nombre.isEmpty()) {
+            this.nombre = nombre;
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public String getHistoria() {
@@ -116,17 +128,12 @@ public class Personaje {
     }
 
     public boolean setHistoria(String historia) {
-        // Pattern patron = Pattern.compile(REGEX_LETRAS);
-        // String stCampoLetra = historia.toString().trim();
-        // if (patron.matcher(stCampoLetra).matches()) { //expresion regular- todos los set
-        this.historia = historia;
-        //   Log.d(TAG, "Campo historia correcto");
-        return true;
-        // } else {
-        //Log.d(TAG, "Campo historia incorrecto");
-        //  this.historia = historia;
-        //  return false;
-        //   }
+        if (!historia.isEmpty()) {
+            this.historia = historia;
+            return true;
+        } else {
+            return false;
+        }
 
     }
 }

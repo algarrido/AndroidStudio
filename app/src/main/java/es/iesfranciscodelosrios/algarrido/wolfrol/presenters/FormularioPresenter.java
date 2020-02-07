@@ -79,7 +79,7 @@ public class FormularioPresenter implements FormularioInterface.Presenter {
     public static final String REGEX_FECHA = "^(?:3[01]|[12][0-9]|0?[1-9])([\\-/.])(0?[1-9]|1[1-2])\\1\\d{4}$";
 
     @Override
-    public void validacionCampoPeso(boolean hasFocus, TextInputLayout nombreInputLayout, TextInputEditText n, FloatingActionButton b) {
+    public void validacionCampoPeso(boolean hasFocus, TextInputLayout nombreInputLayout, TextInputEditText n, Button b) {
         Pattern patron = Pattern.compile(REGEX_LETRAS);
 
         String stCampoLetra = n.getText().toString().trim();
@@ -88,6 +88,46 @@ public class FormularioPresenter implements FormularioInterface.Presenter {
             Log.d("AppCRUD", n.getText().toString());
             if (patron.matcher(stCampoLetra).matches() && stCampoLetra.isEmpty()) {
                 nombreInputLayout.setError("Peso inválido");
+                b.setEnabled(false);
+
+            } else {
+                nombreInputLayout.setError("");
+                b.setEnabled(true);
+            }
+
+        }
+
+    }
+    @Override
+    public void validacionCampoGenero(boolean hasFocus, TextInputLayout nombreInputLayout, TextInputEditText n, Button b) {
+        Pattern patron = Pattern.compile(REGEX_LETRAS);
+
+        String stCampoLetra = n.getText().toString().trim();
+
+        if (!hasFocus) {
+            Log.d("AppCRUD", n.getText().toString());
+            if (!patron.matcher(stCampoLetra).matches()) {
+                nombreInputLayout.setError("Genero inválido");
+                b.setEnabled(false);
+
+            } else {
+                nombreInputLayout.setError("");
+                b.setEnabled(true);
+            }
+
+        }
+
+    }
+    @Override
+    public void validacionCampoNombre(boolean hasFocus, TextInputLayout nombreInputLayout, TextInputEditText n, Button b) {
+        Pattern patron = Pattern.compile(REGEX_LETRAS);
+
+        String stCampoLetra = n.getText().toString().trim();
+
+        if (!hasFocus) {
+            Log.d("AppCRUD", n.getText().toString());
+            if (!patron.matcher(stCampoLetra).matches()) {
+                nombreInputLayout.setError("Nombre inválido");
                 b.setEnabled(false);
 
             } else {
@@ -161,12 +201,22 @@ public class FormularioPresenter implements FormularioInterface.Presenter {
             bmp = null;
         }
     }
+    @Override
+    public ArrayList<String> getAllRazas() {
+        return personaje.mostrarRazas();
+    }
+    @Override
+    public void eliminar(int id){
+        personaje.eliminar(id);
+    }
+
+    @Override
+    public void editar(String nombre, String edad, String genero, String historia, String imagen, String fecha, String raza, String partida){
+        personaje.actualizar(nombre,edad,genero,historia,imagen,fecha,raza,partida);
+        view.cerrarFormulario();
+    }
 
 }
-
-
-
-
 
 
 
