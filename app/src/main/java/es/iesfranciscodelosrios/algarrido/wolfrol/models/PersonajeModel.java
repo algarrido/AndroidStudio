@@ -30,6 +30,18 @@ public class PersonajeModel extends SQLiteOpenHelper {
         return sInstance;
     }
 
+    /**
+     * Este para las pruebas
+     * @param c
+     * @return
+     */
+    public static synchronized PersonajeModel getInstance(Context c) {
+        if (sInstance == null) {
+            sInstance = new PersonajeModel(c); //esto ha acmabiado
+        }
+        return sInstance;
+    }
+
     @Override
     public void onConfigure(SQLiteDatabase db) {
         super.onConfigure(db);
@@ -44,18 +56,12 @@ public class PersonajeModel extends SQLiteOpenHelper {
         String CREATE_TABLE_RAZA = "CREATE TABLE Raza (id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "nombre TEXT)";
 
-
         try {
             if (db != null) {
                 db.execSQL(CREATE_TABLE_PERSONAJE);
                 db.execSQL(CREATE_TABLE_RAZA);
+                //datosPorDefecto();
 
-              /*  ContentValues values = new ContentValues();
-                values.put("nombre", "Lug");
-                values.put("historia", "Desde pequeño se intereso por el ejército, y a los 19 años ya había ingresado en el, en la división de infantería. A los 21 años, ocurrirá el suceso que más cambiará la personalidad de Ceryon: la muerte de su padre");
-
-                // Insertar...
-                db.insert("Personaje", null, values);*/
                 Log.d("PersonajeModel", CREATE_TABLE_PERSONAJE);
 
             }
@@ -70,6 +76,14 @@ public class PersonajeModel extends SQLiteOpenHelper {
 
     }
 
+    public void datosPorDefecto() {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("nombre", "Lug");
+        values.put("historia", "Desde pequeño se intereso por el ejército, y a los 19 años ya había ingresado en el, en la división de infantería. A los 21 años, ocurrirá el suceso que más cambiará la personalidad de Ceryon: la muerte de su padre");
+        db.insert("Personaje", null, values);
+
+    }
 
     public ArrayList<Personaje> getAllPersonaje() {
 
@@ -155,7 +169,7 @@ public class PersonajeModel extends SQLiteOpenHelper {
             list.add(personaje10);
 
             db.beginTransaction();
-            String[] campos = new String[]{"id", "nombre", "peso", "genero", "historia", "raza", "imagen"};
+            String[] campos = new String[]{"id", "nombre", "peso", "genero", "historia", "raza", "imagen", "fecha"};
             Cursor c = db.query("Personaje", campos, null, null, null, null, null);
             if (c.moveToFirst()) {
 
@@ -170,8 +184,19 @@ public class PersonajeModel extends SQLiteOpenHelper {
                     String historia = c.getString(c.getColumnIndex("historia"));
                     p.setHistoria(historia);
 
+                    String peso = c.getString(c.getColumnIndex("peso"));
+                    p.setPeso(peso);
 
-                     //String imagen=c.getString(c.getColumnIndex("imagen"));
+                    String genero = c.getString(c.getColumnIndex("genero"));
+                    p.setGenero(genero);
+
+                    String fecha = c.getString(c.getColumnIndex("fecha"));
+                    p.setFecha(fecha);
+
+                    String raza = c.getString(c.getColumnIndex("raza"));
+                    p.setRaza(fecha);
+
+                    //String imagen=c.getString(c.getColumnIndex("imagen"));
                     // p.setImagen(imagen);
 
                     listSQL.add(p);
@@ -222,7 +247,7 @@ public class PersonajeModel extends SQLiteOpenHelper {
                     String historia = c.getString(c.getColumnIndex("historia"));
                     p.setHistoria(historia);
 
-//                     fecha = c.getString(c.getColumnIndex("fecha"));
+//                    fecha = c.getString(c.getColumnIndex("fecha"));
 //                    p.setFecha(fecha);
 
                     Log.d("Buscar", nombre + " metodo buscar nombre");
@@ -253,7 +278,7 @@ public class PersonajeModel extends SQLiteOpenHelper {
             values.put("peso", p.getPeso());
             values.put("genero", p.getGenero());
             values.put("historia", p.getHistoria());
-            values.put("imagen", p.getImagen());
+            //values.put("imagen", p.getImagen());
             values.put("fecha", p.getFecha().toString());
             values.put("raza", p.getRaza());
             values.put("partida", p.isPartida());
@@ -369,4 +394,5 @@ public class PersonajeModel extends SQLiteOpenHelper {
         }
 
     }
+
 }

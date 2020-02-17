@@ -2,6 +2,8 @@ package es.iesfranciscodelosrios.algarrido.wolfrol;
 
 import org.junit.Test;
 
+import es.iesfranciscodelosrios.algarrido.wolfrol.models.Personaje;
+
 import static org.junit.Assert.*;
 
 /**
@@ -10,8 +12,10 @@ import static org.junit.Assert.*;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 public class ExampleUnitTest {
+    Personaje p= new Personaje();
     @Test
     public void addition_isCorrect() {
         assertEquals(4, 2 + 2);
+
     }
 }

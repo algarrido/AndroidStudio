@@ -14,7 +14,6 @@ import android.widget.ImageView;
 
 import androidx.core.content.ContextCompat;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 

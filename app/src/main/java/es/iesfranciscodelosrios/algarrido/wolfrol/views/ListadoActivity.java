@@ -40,7 +40,6 @@ public class ListadoActivity extends AppCompatActivity implements ListadoInterfa
     TextInputEditText etNombre;
     Spinner spinner;
     View vv;
-
     private final static int BUSCAR = 0;
 
 
@@ -107,7 +106,7 @@ public class ListadoActivity extends AppCompatActivity implements ListadoInterfa
         public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
 
             presenter.eliminar(viewHolder.getAdapterPosition() - 9);
-            //presenter.eliminar(Integer.parseInt(id));
+
             items.remove(viewHolder.getAdapterPosition());
             int i = items.size();
             contador.setText(i + " resultados encontrados");
@@ -204,25 +203,28 @@ public class ListadoActivity extends AppCompatActivity implements ListadoInterfa
             // startActivity(intent);
             int position = recyclerView.getChildAdapterPosition(vv);
             Log.d(TAG, "Click RV: " + items.get(position).getId().toString());
-          //  intent.putExtra("ID", items.get(position).getId());
-            Log.d(TAG, "editar " + items.get(position).getId().toString()+ " este del listado");
+            //  intent.putExtra("ID", items.get(position).getId());
+            Log.d(TAG, "editar " + items.get(position).getId().toString() + " este del listado");
+            Log.d("editar", items.get(position).getPeso() + " peso este del listado");
 
             intent.putExtra("NOMBRE", items.get(position).getNombre());
-           // intent.putExtra("PESO", items.get(position).getPeso());
-             intent.putExtra("ID", items.get(position).getId());
-//            intent.putExtra("PESO", items.get(position).getPeso());
-//            intent.putExtra("GENERO", items.get(position).getGenero());
-//            intent.putExtra("HISTORIA", items.get(position).getHistoria());
+            intent.putExtra("PESO", items.get(position).getPeso());
+            intent.putExtra("ID", id);
+            Log.d("editar", String.valueOf(id));
+//          intent.putExtra("PESO", items.get(position).getPeso());
+            intent.putExtra("GENERO", items.get(position).getGenero());
+            intent.putExtra("HISTORIA", items.get(position).getHistoria());
 //            //intent.putExtra("IMAGEN", items.get(position).getImagen());
-//            intent.putExtra("FECHA", items.get(position).getFecha());
-//            //intent.putExtra("RAZA", items.get(position).getRaza());
-//            intent.putExtra("PARTIDA", items.get(position).isPartida());
+            intent.putExtra("FECHA", items.get(position).getFecha());
+            intent.putExtra("RAZA", items.get(position).getRaza());
+            intent.putExtra("PARTIDA", items.get(position).isPartida());
 
-            startActivityForResult(intent, 1);
+            startActivityForResult(intent, 0);
 
             //BUNDLE
         }
     }
+
 
     @Override
     public void lanzarSobreMi() {

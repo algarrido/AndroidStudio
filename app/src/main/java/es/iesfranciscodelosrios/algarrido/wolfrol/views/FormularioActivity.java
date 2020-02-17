@@ -68,7 +68,7 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
     //Widgets
     EditText etFecha;
     Button ibObtenerFecha;
-
+    String iid = "";
     TextInputEditText nombree, pesoo, generoo;
     EditText historiaa;
     String razas;
@@ -101,8 +101,8 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
         generoInputLayout = (TextInputLayout) findViewById(R.id.TextGenero);
 
         final TextInputEditText p = (TextInputEditText) findViewById(R.id.peso);
-        final TextInputEditText n=(TextInputEditText)findViewById(R.id.nombre);
-        final TextInputEditText g=(TextInputEditText)findViewById(R.id.genero);
+        final TextInputEditText n = (TextInputEditText) findViewById(R.id.nombre);
+        final TextInputEditText g = (TextInputEditText) findViewById(R.id.genero);
 
         p.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -226,7 +226,7 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
                 p.setHistoria(historiaa.getText().toString());
                 p.setRaza(spinner.getSelectedItem().toString());
                 p.setFecha(etFecha.getText().toString());
-                p.setImagen(gallery.getDrawable().toString());
+                // p.setImagen(gallery.getDrawable().toString());
                 if (partida.isChecked()) {
                     p.setPartida(partida.getText().toString());
                 } else {
@@ -246,8 +246,9 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
                 });
             }
         });
-
         //------------------------------BOTON ELIMINAR---------------------------------------------------
+        // final String i= getIntent().getExtras().getString("ID").toString();
+
         btn = findViewById(R.id.ButtonEliminar);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -257,24 +258,20 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
                 dialog.setMessage(R.string.mensaje);
                 dialog.setCancelable(true);
                 // Log.d("eliminar", id);
-                //final String i= getIntent().getExtras().getString("ID").toString();
                 dialog.setPositiveButton(
                         "Sí",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int
                                     id) {
-                                // String iid = getIntent().getExtras().getString("ID");
-
-                                //Personaje p = new Personaje();
-                               // p.setId(Integer.parseInt(getIntent().getExtras().getString("ID")));
-                                //Log.d("editar",idd+" este justo antes del eliminar");
+                               //no implementado
                                 presenter.eliminar(1);
-                                Log.d("editar",getIntent().getExtras().getString("ID") +" este justo antes del eliminar");
+
                                 Log.d("eliminar", "pasa");
 
-                                Intent intent = new Intent(FormularioActivity.this, ListadoActivity.class);
+                                finish();
+                               /* Intent intent = new Intent(FormularioActivity.this, ListadoActivity.class);
                                 startActivity(intent);
-
+*/
                             }
                         });
                 dialog.setNegativeButton(
@@ -290,29 +287,31 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
             }
 
         });
-
         editar = (Button) findViewById(R.id.ButtonEditar);
         editar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View vieww) {
-                //nombree.setText(getIntent().getExtras().get("NOMBRE").toString());
-                Personaje p = new Personaje();
+                //Personaje perso = new Personaje();
 
-              //  p.setNombre(nombree.getText().toString());
-               String n = nombree.getText().toString();
-               String pe = pesoo.getText().toString();
-               String g = generoo.getText().toString();
-               String h = historiaa.getText().toString();
-               String i = gallery.getDrawable().toString();
-               String f = etFecha.getText().toString();
-               String r = spinner.getSelectedItem().toString();
-               String pa = partida.getText().toString();
+               // perso.setNombre(String.valueOf(nombree));
+                String n = nombree.getText().toString();
+                String pe = pesoo.getText().toString();
+                String g = generoo.getText().toString();
+                String h = historiaa.getText().toString();
+                String i = gallery.getDrawable().toString();
+                String f = etFecha.getText().toString();
+                String r = spinner.getSelectedItem().toString();
+                String pa = partida.getText().toString();
 
-               Log.d("editar", n + " dentro del boton editar");
-               presenter.editar(n, n, n, n, n, n, n, n);
+                Log.d("editar", n + " dentro del boton editar");
+                Log.d("editar", pe + " dentro del boton editar");
+
+                presenter.editar(n, pe, g, h, i, f, r, pa);
 
             }
         });
+
+
         //////////////////////////////////PERMISO PARA GALERIA////////////////////////////////////////////
         gallery = (ImageView) findViewById(R.id.imageViewPersonaje);
         gallery.setClickable(true);
@@ -331,17 +330,24 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
         //////////////////////
 
         try {
-            this.nombree.setText(getIntent().getExtras().getString("NOMBRE").toString());
-            //this.pesoo.setText(getIntent().getExtras().getString("PESO").toString());
 
-//            this.generoo.setText(getIntent().getExtras().get("GENERO").toString());
-//            this.historiaa.setText(getIntent().getExtras().get("HISTORIA").toString());
-//            this.etFecha.setText(getIntent().getExtras().get("FECHA").toString());
+            this.nombree.setText(getIntent().getExtras().getString("NOMBRE").toString());
+
+            this.pesoo.setText(getIntent().getExtras().getString("PESO").toString());
+          //  perso.setPeso(String.valueOf(pesoo));
+            this.generoo.setText(getIntent().getExtras().get("GENERO").toString());
+            //perso.setGenero(String.valueOf(generoo));
+            this.historiaa.setText(getIntent().getExtras().get("HISTORIA").toString());
+            //perso.setHistoria(String.valueOf(historiaa));
+            this.etFecha.setText(getIntent().getExtras().get("FECHA").toString());
+            //perso.setFecha(String.valueOf(etFecha));
 //            //this.gallery.get(getIntent().getExtras().get("IMAGEN").toString());
-//            // this.spinner.setOnItemSelectedListener(getIntent().getExtras().getInt("CURR_NOTE_CATEGORY");
-//            this.partida.setText(getIntent().getExtras().get("PARTIDA").toString());
+            // this.spinner.getSelectedItem(Integer.parseInt(getIntent().getExtras().get("RAZA").toString()));
+            //this.partida.setText(getIntent().getExtras().get("PARTIDA").toString());
 
             Log.d("editar", this.nombree.getText().toString() + " nombre del try");
+            Log.d("editar", this.pesoo.getText().toString() + " peso del try");
+            //   Log.d("editar", iid + " id del try");
 
 
             //  Log.d("editar", this.pesoo.getText().toString() + " este despues");
@@ -351,6 +357,7 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
             this.btn.setVisibility(View.INVISIBLE);
             this.editar.setVisibility(View.INVISIBLE);
         }
+
 
     }
 

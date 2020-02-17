@@ -109,12 +109,13 @@ public class BuscarActivity extends AppCompatActivity implements BuscarInterface
 
                 if (spinner.getSelectedItem().toString().length() == 0) resultadoSpinner = "%";
                 else resultadoSpinner = spinner.getSelectedItem().toString();
-
                 Intent i = getIntent();
 
                 i.putExtra("RESULTADONOMBRE", resultadoNombre);
                 i.putExtra("RESULTADOFECHA", resultadoFecha);
                 i.putExtra("RESULTADOSPINNER", resultadoSpinner);
+               // presenter.filtrar(resultadoNombre,resultadoFecha,resultadoSpinner,nombre,etFecha,spinner);
+
                 setResult(RESULT_OK, i);
 
                 finish();
