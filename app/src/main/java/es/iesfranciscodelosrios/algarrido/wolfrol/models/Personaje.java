@@ -148,7 +148,7 @@ public class Personaje {
         Pattern patron = Pattern.compile(REGEX_HIS);
         String h = historia.trim();
 
-        if (historia.isEmpty() || !patron.matcher(h).matches()) {
+        if (historia.isEmpty() ) {
             return false;
         }  else {
             this.historia = historia;

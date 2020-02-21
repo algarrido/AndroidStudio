@@ -83,19 +83,13 @@ public class PersonajeUnitTest {
     @Test
     public void historiaTest() {
 
-        assertEquals(true, p.setHistoria("Lorem Ipsum is simply dummy text of the printing and typesetting industry."));
-        assertEquals(true, p.setHistoria("Lorem Ipsum is simply dummy, text of the printing, and typesetting industry."));
-        assertEquals(true, p.setHistoria("Lorem Ipsum is ¿simply? dummy text of the printing and typesetting industry."));
-        assertEquals(true, p.setHistoria("Lorem Ipsum is simply dummy ¡text! of the printing and typesetting industry."));
-
-        assertEquals(false, p.setHistoria("*Lorem Ipsum is simply dummy text of the printing and typesetting industry."));
-        assertEquals(false, p.setHistoria("*Lorem Ipsum is simply dummy text of the printing and typesetting industry.*"));
+        assertEquals(true, p.setHistoria("Lorem Ipsum is"));
+        assertEquals(true, p.setHistoria("Lorem Ipsum is dummy,."));
+        assertEquals(true, p.setHistoria("Lorem Ipsum is ¿simply?"));
+        assertEquals(true, p.setHistoria("En el año 1234"));
         assertEquals(false, p.setHistoria(""));
-        assertEquals(false, p.setHistoria("*"));
-        assertEquals(false, p.setHistoria("1234"));
 
-
-        assertEquals("Lorem Ipsum is simply dummy ¡text! of the printing and typesetting industry.", p.getHistoria());
+        assertEquals("En el año 1234", p.getHistoria());
 
 
 

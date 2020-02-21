@@ -97,6 +97,7 @@ public class FormularioPresenter implements FormularioInterface.Presenter {
         }
 
     }
+
     @Override
     public void validacionCampoGenero(boolean hasFocus, TextInputLayout nombreInputLayout, TextInputEditText n, Button b) {
         Pattern patron = Pattern.compile(REGEX_LETRAS);
@@ -117,6 +118,7 @@ public class FormularioPresenter implements FormularioInterface.Presenter {
         }
 
     }
+
     @Override
     public void validacionCampoNombre(boolean hasFocus, TextInputLayout nombreInputLayout, TextInputEditText n, Button b) {
         Pattern patron = Pattern.compile(REGEX_LETRAS);
@@ -200,18 +202,20 @@ public class FormularioPresenter implements FormularioInterface.Presenter {
             bmp = null;
         }
     }
+
     @Override
     public ArrayList<String> getAllRazas() {
         return personaje.mostrarRazas();
     }
+
     @Override
-    public void eliminar(int id){
+    public void eliminar(int id) {
         personaje.eliminar(id);
     }
 
     @Override
-    public void editar(String nombre, String edad, String genero, String historia, String imagen, String fecha, String raza, String partida){
-        personaje.actualizar(nombre,edad,genero,historia,imagen,fecha,raza,partida);
+    public void editar(String nombre, String edad, String genero, String historia, String fecha, String raza, String partida) {
+       // personaje.actualizar();
         view.cerrarFormulario();
     }
 

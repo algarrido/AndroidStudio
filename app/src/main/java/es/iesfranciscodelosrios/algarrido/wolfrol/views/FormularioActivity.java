@@ -298,7 +298,7 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
                 String pe = pesoo.getText().toString();
                 String g = generoo.getText().toString();
                 String h = historiaa.getText().toString();
-                String i = gallery.getDrawable().toString();
+                //String i = gallery.getDrawable().toString();
                 String f = etFecha.getText().toString();
                 String r = spinner.getSelectedItem().toString();
                 String pa = partida.getText().toString();
@@ -306,7 +306,7 @@ public class FormularioActivity extends AppCompatActivity implements FormularioI
                 Log.d("editar", n + " dentro del boton editar");
                 Log.d("editar", pe + " dentro del boton editar");
 
-                presenter.editar(n, pe, g, h, i, f, r, pa);
+               // presenter.editar(n, pe, g, h , f, r, pa);
 
             }
         });

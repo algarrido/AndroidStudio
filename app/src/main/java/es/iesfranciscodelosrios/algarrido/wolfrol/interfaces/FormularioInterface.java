@@ -39,6 +39,6 @@ public interface FormularioInterface {
         void galeria(ImageView i, ImageView iv, Bitmap bmp);
         ArrayList<String> getAllRazas();
         void eliminar(int id);
-        void editar(String nombre, String edad, String genero, String historia, String imagen, String fecha, String raza, String partida);
+        void editar(String nombre, String edad, String genero, String historia, String fecha, String raza, String partida);
     }
 }
